@@ -48,7 +48,7 @@ export default function Home() {
       <div className="py-[100px] mx-[200px] w-[360px] ">
         <h1 className='text-[40px]'>
         Hello,<br/>
-        let's focus today.</h1>
+        let&apos;s focus today.</h1>
         <div className='flex w-[360px] mt-[50px]'>
           <div className='flex flex-row'>
             <textarea className='flex w-[296px] h-[56px] border-1 border-gray-500 text-start text-gray-700'  
