@@ -2,13 +2,19 @@
 import { useState } from 'react';
 import './globals.css';
 
+interface TodoItem {
+  text: string
+  selectedTime: number
+  selectedColor: string
+}
+
 export default function Home() {
-  const [todoItem, setTodoItem] = useState<string[]>([]);
+  const [todoItem, setTodoItem] = useState<TodoItem[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedColor, setSelectedColor] = useState<string>('black');
   const [selectedTime, setSelectedTime] = useState<number>(10);
-
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(event.target.value);
@@ -16,7 +22,12 @@ export default function Home() {
 
   const addTodoItem = () => {
     if (inputValue.trim() !== '') {
-      setTodoItem([...todoItem, `${selectedTime}분 ${selectedColor} - ${inputValue}`]);
+      const newItem: TodoItem = {
+        text: inputValue,
+        selectedTime: selectedTime,
+        selectedColor: selectedColor
+      }
+      setTodoItem([...todoItem, newItem])
       setInputValue('');
       setShowModal(false)
     }
@@ -25,6 +36,10 @@ export default function Home() {
   const handleDeleteAll = () => {
     setTodoItem([]);
     setShowModal(false);
+  };
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
   };
 
   return (
@@ -36,15 +51,23 @@ export default function Home() {
         let's focus today.</h1>
         <div className='flex w-[360px] mt-[50px]'>
           <div className='flex flex-row'>
-            <textarea className='flex w-[240px] h-[50px] border-1 border-black text-gray-600 text-center'  
+            <textarea className='flex w-[296px] h-[56px] border-1 border-gray-500 text-start text-gray-700'  
                       value={inputValue}
-                      onChange={handleInputChange}></textarea>
-            <button className='w-[50px] h-[50px] bg-black rounded-lg text-white text-[30px]' onClick={() => setShowModal(true)}>+</button>
+                      onChange={handleInputChange}
+                      placeholder='Todo를 적어주세요.'></textarea>
+            <button className='w-[56px] h-[56px] ml-[20px] bg-black rounded-lg text-white text-[30px]' onClick={() => setShowModal(true)}>+</button>
           </div>
         </div>
         {todoItem.map((item, index) => (
-          <div key={index} className="border-1 w-[240px] h-[50px] border-gray-600 mt-4">
-            {item}
+          <div key={index} className="border-1 w-[380px] h-[136px] border-black my-8">
+            <div className='flex flex-row gap-x-[5px] items-center'>
+              <div style={{backgroundColor: `${item.selectedColor}`}} className='w-[16px] h-[16px] rounded-xl'/>
+              <div>{item.selectedTime}min</div>
+            </div>
+            <br/>
+            <div className='my-[10px]'>
+            {item.text}
+            </div>
           </div>
         ))}
         {showModal && (
