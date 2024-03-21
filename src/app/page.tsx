@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import './globals.css';
 
@@ -15,20 +15,40 @@ export default function Home() {
   const [todoItem, setTodoItem] = useState<TodoItem[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [selectedColor, setSelectedColor] = useState<string>('black');
-  const [selectedTime, setSelectedTime] = useState<number>(10);
+  const [selectedColor, setSelectedColor] = useState<string>(
+    localStorage.getItem('selectedColor') || 'black'
+  );
+  const selectedTimeFromStorage = localStorage.getItem('selectedTime');
+  const initialSelectedTime = selectedTimeFromStorage ? parseInt(selectedTimeFromStorage) : 10;
+  const [selectedTime, setSelectedTime] = useState<number>(initialSelectedTime);
+
+  // 아래와 같이 하면 localStorage.getItem('selectedTime')의 반환값이 string|null이라
+  // ts 상으로 string으로 해석되지 않음
+  // 따라서 localStorage.getItem('selectedTime')가 null인지 먼저 확인해주고 넣도록 initial 변수 추가
+  // const [selectedTime, setSelectedTime] = useState<number>(
+  //   parseInt(localStorage.getItem('selectedTime')) || 10
+  // );
+  // const [selectedTime, setSelectedTime] = useState<number>(10);
   const [selectedTodoTask, setSelectedTodoTask] = useState<number | null>(null);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-
+  
   const handleTodoTaskClick = (index: number) => {
     setSelectedTodoTask(index);
     const selectedTask = todoItem[index];
     setSelectedColor(selectedTask.selectedColor);
+    console.log(selectedColor, selectedTask,selectedTime)
+    localStorage.setItem('selectedTime', selectedTime.toString());
+    localStorage.setItem('selectedColor', selectedColor);
   };
 
-  const handleStartButtonClick = () => {
-    router.push('/task')
-  };
+const handleStartButtonClick = () => {
+  if (selectedTodoTask !== null) {
+      const selectedTask = todoItem[selectedTodoTask];
+      const { selectedTime, selectedColor } = selectedTask;
+      router.push(`/task?time=${selectedTime}&color=${selectedColor}`);
+  }
+};
+
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(event.target.value);
@@ -44,6 +64,7 @@ export default function Home() {
       setTodoItem([...todoItem, newItem])
       setInputValue('');
       setShowModal(false)
+      
     }
   };
 

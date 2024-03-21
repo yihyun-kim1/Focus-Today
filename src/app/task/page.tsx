@@ -1,24 +1,72 @@
 'use client'
-import { useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
 import '../globals.css';
 
-interface TodoItem {
-  text: string
-  selectedTime: number
-  selectedColor: string
-}
+export default function Task() {
+  const router = useRouter();
+  const selectedColor = localStorage.getItem('selectedColor') || 'black'; // 로컬 스토리지에서 색상 가져오기
+  const [countdown, setCountdown] = useState(Number(localStorage.getItem('selectedTime') || 10) * 60); // 초 단위로 변환
+  const [timerId, setTimerId] = useState<number | null>(null); // 타이머 ID
+  const [isRunning, setIsRunning] = useState(false);
 
-export default function Home() {
-  const router = useRouter(); 
-  const pathname = usePathname();
+  useEffect(() => {
+    return () => {
+      if (timerId) clearInterval(timerId);
+    };
+  }, []);
+  
+  useEffect(() => {
+    if (isRunning) {
+      const id = setInterval(() => {
+        setCountdown(prevCountdown => {
+          if (prevCountdown === 0) {
+            clearInterval(id);
+            setIsRunning(false);
+            return 0;
+          } else {
+            return prevCountdown - 1;
+          }
+        });
+      }, 1000);
+      setTimerId(Number(id));
+      return () => clearInterval(id);
+    }
+  }, [isRunning]);
+  
 
-  return (
+    const formatTime = (seconds:number) => {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `00:${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+    };
 
-    <main className="flex min-h-screen flex-col bg-white ">
-      <div className="py-[100px] mx-[200px] w-[360px] ">
-        focusing !!!
+    const handleStart = () => {
+      setIsRunning(true);
+    };
+  
+    const handleStop = () => {
+      setIsRunning(false);
+    };
+  
+    return (
+        <div className={`w-full h-screen flex flex-col items-center justify-center bg-${selectedColor}-500`}>
+            <div className="text-6xl text-white">{formatTime(countdown)}</div>
+            <div className="mt-4">
+        <div className='flex flex-col gap-y-[15px]'>
+        {/* {!isRunning ? ( */}
+          <button className="bg-black w-[200px] text-white px-4 py-2 rounded-md mr-4" onClick={handleStart}>
+            Start
+          </button>
+        {/* ) : ( */}
+          <button className="bg-black text-white px-4 py-2 rounded-md mr-4" onClick={handleStop}>
+            Stop
+          </button>
+        {/* )} */}
+        </div>
       </div>
-    </main>
-  );
+        </div>
+    );
 }
+
