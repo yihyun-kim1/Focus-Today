@@ -22,7 +22,12 @@ export default function Home() {
 
   const handleTodoTaskClick = (index: number) => {
     setSelectedTodoTask(index);
-    // router.push('/task');
+    const selectedTask = todoItem[index];
+    setSelectedColor(selectedTask.selectedColor);
+  };
+
+  const handleStartButtonClick = () => {
+    router.push('/task')
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -53,8 +58,8 @@ export default function Home() {
 
   return (
 
-    <main className="flex min-h-screen flex-col bg-white ">
-      <div className="py-[100px] mx-[200px] w-[360px] ">
+    <main className="flex min-h-screen flex-row bg-white ">
+      <div className="py-[100px] mx-[200px] w-[360px]">
         <h1 className='text-[40px]'>
         Hello,<br/>
         let&apos;s focus today.</h1>
@@ -68,13 +73,13 @@ export default function Home() {
           </div>
         </div>
         {todoItem.map((item, index) => (
-            <div key={index} className={`border-1 w-[380px] h-[136px] my-8 cursor-pointer ${selectedTodoTask === index ? 'border-' + item.selectedColor : ''}`} onClick={() => handleTodoTaskClick(index)}>
+            <div key={index} className={`border-1 rounded-xl w-[380px] py-[10px] border-gray-700 h-[136px] my-8 cursor-pointer ${selectedTodoTask === index ? 'border-' + item.selectedColor : ''}`} onClick={() => handleTodoTaskClick(index)}>
             <div className='flex flex-row gap-x-[5px] items-center'>
-              <div style={{backgroundColor: `${item.selectedColor}`}} className='w-[16px] h-[16px] rounded-xl'/>
+              <div style={{backgroundColor: `${item.selectedColor}`}} className='mx-[10px] w-[16px] h-[16px] rounded-xl'/>
               <div>{item.selectedTime}min</div>
             </div>
             <br/>
-            <div className='my-[10px]'>
+            <div className='my-[10px] mx-[10px] text-[20px] max-w-[380px] overflow-hidden truncate line-clamp-20'>
             {item.text}
             </div>
           </div>
@@ -83,29 +88,29 @@ export default function Home() {
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-8 w-[360px] h-[400px] flex flex-col">
             <h2 className="text-lg font-semibold mb-4">컬러</h2>
-            <div className="flex flex-row mb-4">
+            <div className="flex flex-row w-[200px] h-[30px] my-2 ">
               <button
-                className={`flex-1 w-[30px] h-[30px] bg-black text-white mr-2 ${selectedColor === 'black' ? 'border-2 border-gray-800' : ''}`}
+                className={`flex w-[30px] h-[30px] rounded-md bg-black text-white mr-2 ${selectedColor === 'black' ? 'border-2 border-gray-800' : ''}`}
                 onClick={() => setSelectedColor('black')}
               >
               </button>
               <button
-                className={`flex-1 bg-pink-500 text-white mr-2 ${selectedColor === 'pink' ? 'border-2 border-gray-800' : ''}`}
+                className={`flex bg-pink-500 w-[30px] h-[30px] rounded-md text-white mr-2 ${selectedColor === 'pink' ? 'border-2 border-gray-800' : ''}`}
                 onClick={() => setSelectedColor('pink')}
               >
               </button>
               <button
-                className={`flex-1 bg-orange-500 text-white mr-2 ${selectedColor === 'orange' ? 'border-2 border-gray-800' : ''}`}
+                className={`flex bg-orange-500 w-[30px] h-[30px] rounded-md text-white mr-2 ${selectedColor === 'orange' ? 'border-2 border-gray-800' : ''}`}
                 onClick={() => setSelectedColor('orange')}
               >
               </button>
               <button
-                className={`flex-1 bg-yellow-500 text-white mr-2 ${selectedColor === 'yellow' ? 'border-2 border-gray-800' : ''}`}
+                className={`flex bg-yellow-500 w-[30px] h-[30px] rounded-md text-white mr-2 ${selectedColor === 'yellow' ? 'border-2 border-gray-800' : ''}`}
                 onClick={() => setSelectedColor('yellow')}
               >
               </button>
               <button
-                className={`flex-1 bg-green-500 text-white ${selectedColor === 'green' ? 'border-2 border-gray-800' : ''}`}
+                className={`flex bg-green-500 w-[30px] h-[30px] rounded-md text-white ${selectedColor === 'green' ? 'border-2 border-gray-800' : ''}`}
                 onClick={() => setSelectedColor('green')}
               >
               </button>
@@ -116,7 +121,7 @@ export default function Home() {
               {[10, 15, 20, 25, 30, 45, 55].map((time) => (
                 <button
                   key={time}
-                  className={`flex-1 mt-[10px] bg-white border border-gray-800 mr-2 ${selectedTime === time ? 'bg-gray-300' : ''}`}
+                  className={`flex mt-[10px] w-[30px] h-[30px] text-center items-center justify-center bg-gray-300 border rounded-md mr-2 mb-2 ${selectedTime === time ? 'bg-gray-300' : ''}`}
                   onClick={() => setSelectedTime(time)}
                 >
                   {time}
@@ -127,13 +132,13 @@ export default function Home() {
             </div>
             <div className="flex flex-row mt-[20px]">
               <button
-                className="flex-1 bg-gray-300 text-black mr-2"
+                className="flex-1 h-[40px] rounded-md bg-gray-300 text-black mr-2"
                 onClick={handleDeleteAll}
               >
                 Delete
               </button>
               <button
-                className="flex-1 bg-gray-300 text-white"
+                className="flex-1 h-[40px] rounded-md bg-black text-white"
                 onClick={addTodoItem}
               >
                 Save
@@ -143,6 +148,14 @@ export default function Home() {
         </div>
       )}
       </div>
+      {selectedTodoTask !== null && (
+        <div className="flex flex-col w-[300px] items-center text-center justify-center mr-[30px]">
+          <div className={`flex flex-col w-[300px] ml-[300px] h-full items-center justify-center bg-${selectedColor} mb-4`}>
+          <div className={`w-full h-[100px] text-[60px] text-${selectedColor} mb-4`}>00:{selectedTime}:00</div>
+          <button className={`bg-${selectedColor}-500 w-[180px] h-[40px] text-white px-4 py-2 rounded-lg`} onClick={handleStartButtonClick}>Start</button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
