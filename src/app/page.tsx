@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import './globals.css';
 
 interface TodoItem {
@@ -9,12 +10,20 @@ interface TodoItem {
 }
 
 export default function Home() {
+  const router = useRouter(); 
+  const pathname = usePathname();
   const [todoItem, setTodoItem] = useState<TodoItem[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedColor, setSelectedColor] = useState<string>('black');
   const [selectedTime, setSelectedTime] = useState<number>(10);
+  const [selectedTodoTask, setSelectedTodoTask] = useState<number | null>(null);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+
+  const handleTodoTaskClick = (index: number) => {
+    setSelectedTodoTask(index);
+    // router.push('/task');
+  };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(event.target.value);
@@ -59,7 +68,7 @@ export default function Home() {
           </div>
         </div>
         {todoItem.map((item, index) => (
-          <div key={index} className="border-1 w-[380px] h-[136px] border-black my-8">
+            <div key={index} className={`border-1 w-[380px] h-[136px] my-8 cursor-pointer ${selectedTodoTask === index ? 'border-' + item.selectedColor : ''}`} onClick={() => handleTodoTaskClick(index)}>
             <div className='flex flex-row gap-x-[5px] items-center'>
               <div style={{backgroundColor: `${item.selectedColor}`}} className='w-[16px] h-[16px] rounded-xl'/>
               <div>{item.selectedTime}min</div>
