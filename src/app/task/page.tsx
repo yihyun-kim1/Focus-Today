@@ -1,13 +1,14 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 
 import '../globals.css';
 
 export default function Task() {
-  const router = useRouter();
-  const selectedColor = localStorage.getItem('selectedColor') || 'black'; // 로컬 스토리지에서 색상 가져오기
-  const [countdown, setCountdown] = useState(Number(localStorage.getItem('selectedTime') || 10) * 60); // 초 단위로 변환
+  // const router = useRouter();
+  // 클라이언트 측에서만 localStorage 사용하도록 지정
+  const selectedColor = typeof window !== 'undefined' ? localStorage.getItem('selectedColor') || 'black' : 'black'; 
+  const [countdown, setCountdown] = useState(typeof window !== 'undefined' ? Number(localStorage.getItem('selectedTime') || 10) * 60 : 10 * 60); 
   const [timerId, setTimerId] = useState<number | null>(null); // 타이머 ID
   const [isRunning, setIsRunning] = useState(false);
 
