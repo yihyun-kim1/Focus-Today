@@ -135,7 +135,7 @@ const handleStartButtonClick = () => {
 
           </div>
         </div>
-      <div className="">
+      <div className="mt-[40px] overflow-y-auto max-h-[calc(100vh - 40px)]">
         <h1 className='text-[40px] mt-[30px]' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>
         Hello,<br/>
         let&apos;s focus today.</h1>
@@ -148,6 +148,7 @@ const handleStartButtonClick = () => {
             <button className='w-[56px] h-[56px] ml-[10px] rounded-xl text-[30px]'  style={{color: `${!isDarkMode ? '#FFFFFF' : '#000000'}`, backgroundColor: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} onClick={() => setShowModal(true)}>+</button>
           </div>
         </div>
+        <div className='overflow-y-auto max-h-[calc(100vh - 100px)]'>
         {todoItem.map((item, index) => (
             <div key={index} style={{border:'1px solid #D8D8D8'}} className={`rounded-xl w-[380px] py-[10px] h-[136px] my-3 cursor-pointer ${selectedTodoTask === index ? 'border-' + item.selectedColor : ''}`} onClick={() => handleTodoTaskClick(index)}>
             <div className='flex flex-row items-center'>
@@ -160,9 +161,11 @@ const handleStartButtonClick = () => {
             </div>
           </div>
         ))}
+        </div>
         {showModal && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-8 w-[360px] h-[400px] flex flex-col">
+        <div className="absolute flex top-[68%] justify-center items-center">
+           <div className="absolute inset-x-0 bottom-0 w-[380px] bg-opacity-50 flex justify-start items-center">
+          <div className="bg-white p-8 top-50% w-full h-[340px] flex rounded-xl flex-col" style={{border: '1px solid #000000'}}>
             <h2 className="text-lg font-semibold mb-4"  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>컬러</h2>
             <div className="flex flex-row w-[200px] h-[30px] my-2 ">
               <button
@@ -220,6 +223,7 @@ const handleStartButtonClick = () => {
                 Save
               </button>
             </div>
+          </div>
           </div>
         </div>
       )}
