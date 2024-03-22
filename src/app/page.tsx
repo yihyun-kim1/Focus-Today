@@ -9,6 +9,103 @@ interface TodoItem {
   selectedColor: string
 }
 
+
+interface TaskModalProps {
+  isEditTodoItem: boolean;
+  isDarkMode: boolean;
+  selectedColor: string;
+  setSelectedColor: (color: string) => void;
+  selectedTime: number;
+  setSelectedTime: (time: number) => void;
+  handleTime: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  handleDeleteAll: () => void;
+  onSaveButtonClick: () => void;
+}
+
+
+
+const TaskModal: React.FC<TaskModalProps> = ({
+  isEditTodoItem,
+  isDarkMode,
+  selectedColor,
+  setSelectedColor,
+  selectedTime,
+  setSelectedTime,
+  handleTime,
+  handleDeleteAll,
+  onSaveButtonClick,
+  }) => {
+return (
+  <div className={`absolute flex top-[69%] ${isEditTodoItem ? 'left-[33%]' : ''} justify-center items-center`}>
+    <div className="absolute inset-x-0 bottom-0 w-[380px] bg-opacity-50 flex justify-start items-center">
+    <div className="bg-white p-8 top-50% w-full h-[340px] flex rounded-xl flex-col" style={{border: '1px solid #000000'}}>
+      <h2 className="text-lg font-semibold mb-4"  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>컬러</h2>
+      <div className="flex flex-row w-[200px] h-[30px] my-2 ">
+        <button
+          className={`flex w-[30px] h-[30px] rounded-md bg-black text-white mr-2 ${selectedColor === 'black' ? 'border-2 border-gray-800' : ''}`}
+          onClick={() => setSelectedColor('black')}
+        >
+        </button>
+        <button
+          className={`flex w-[30px] h-[30px] rounded-md text-white mr-2 ${selectedColor === 'pink' ? 'border-2 border-gray-800' : ''}`}
+          style={{backgroundColor: '#EE81C8'}}
+          onClick={() => setSelectedColor('#EE81C8')}
+        >
+        </button>
+        <button
+          className={`flex w-[30px] h-[30px] rounded-md text-white mr-2 ${selectedColor === 'orange' ? 'border-2 border-gray-800' : ''}`}
+          style={{backgroundColor: '#FF734B'}}
+          onClick={() => setSelectedColor('#FF734B')}
+        >
+        </button>
+        <button
+          className={`flex w-[30px] h-[30px] rounded-md text-white mr-2 ${selectedColor === 'yellow' ? 'border-2 border-gray-800' : ''}`}
+          style={{backgroundColor: '#FFD44F'}}
+          onClick={() => setSelectedColor('#FFD44F')}
+        >
+        </button>
+        <button
+          className={`flex w-[30px] h-[30px] rounded-md text-white ${selectedColor === 'green' ? 'border-2 border-gray-800' : ''}`}
+          style={{backgroundColor: '#35C792'}}
+          onClick={() => setSelectedColor('#35C792')}
+        >
+        </button>
+      </div>
+      <div className="flex flex-col">
+        <h2 className="text-lg font-semibold"  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>시간</h2>
+        <div className='flex flex-row'>
+        {[10, 15, 20, 25, 30, 45, 55].map((time) => (
+          <button
+            key={time}
+            className={`flex mt-[10px] w-[30px] h-[30px] text-center items-center justify-center bg-gray-300 border rounded-md mr-2 mb-2 ${selectedTime === time ? 'bg-gray-300' : ''}`}
+            onClick={() => setSelectedTime(time)}
+          >
+            {time}
+          </button>
+        ))} 
+        </div>
+        <textarea placeholder='직접입력 (분으로만 적어주세요)' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} onChange={handleTime}></textarea>
+      </div>
+      <div className="flex flex-row mt-[20px]">
+        <button
+          className="flex-1 h-[40px] rounded-md bg-gray-300 text-black mr-2"
+          onClick={handleDeleteAll}
+        >
+          Delete
+        </button>
+        <button
+          className="flex-1 h-[40px] rounded-md bg-black text-white"
+          onClick={onSaveButtonClick}
+        >
+          Save
+        </button>
+      </div>
+    </div>
+    </div>
+  </div>
+  )
+  }
+
 export default function Home() {
   const router = useRouter(); 
   const pathname = usePathname();
@@ -176,74 +273,19 @@ const handleStartButtonClick = () => {
         ))}
         </div>
         {showModal && (
-        <div className={`absolute flex top-[69%] ${isEditTodoItem ? 'left-[33%]' : ''} justify-center items-center`}>
-          <div className="absolute inset-x-0 bottom-0 w-[380px] bg-opacity-50 flex justify-start items-center">
-          <div className="bg-white p-8 top-50% w-full h-[340px] flex rounded-xl flex-col" style={{border: '1px solid #000000'}}>
-            <h2 className="text-lg font-semibold mb-4"  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>컬러</h2>
-            <div className="flex flex-row w-[200px] h-[30px] my-2 ">
-              <button
-                className={`flex w-[30px] h-[30px] rounded-md bg-black text-white mr-2 ${selectedColor === 'black' ? 'border-2 border-gray-800' : ''}`}
-                onClick={() => setSelectedColor('black')}
-              >
-              </button>
-              <button
-                className={`flex w-[30px] h-[30px] rounded-md text-white mr-2 ${selectedColor === 'pink' ? 'border-2 border-gray-800' : ''}`}
-                style={{backgroundColor: '#EE81C8'}}
-                onClick={() => setSelectedColor('#EE81C8')}
-              >
-              </button>
-              <button
-                className={`flex w-[30px] h-[30px] rounded-md text-white mr-2 ${selectedColor === 'orange' ? 'border-2 border-gray-800' : ''}`}
-                style={{backgroundColor: '#FF734B'}}
-                onClick={() => setSelectedColor('#FF734B')}
-              >
-              </button>
-              <button
-                className={`flex w-[30px] h-[30px] rounded-md text-white mr-2 ${selectedColor === 'yellow' ? 'border-2 border-gray-800' : ''}`}
-                style={{backgroundColor: '#FFD44F'}}
-                onClick={() => setSelectedColor('#FFD44F')}
-              >
-              </button>
-              <button
-                className={`flex w-[30px] h-[30px] rounded-md text-white ${selectedColor === 'green' ? 'border-2 border-gray-800' : ''}`}
-                style={{backgroundColor: '#35C792'}}
-                onClick={() => setSelectedColor('#35C792')}
-              >
-              </button>
-            </div>
-            <div className="flex flex-col">
-              <h2 className="text-lg font-semibold"  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>시간</h2>
-              <div className='flex flex-row'>
-              {[10, 15, 20, 25, 30, 45, 55].map((time) => (
-                <button
-                  key={time}
-                  className={`flex mt-[10px] w-[30px] h-[30px] text-center items-center justify-center bg-gray-300 border rounded-md mr-2 mb-2 ${selectedTime === time ? 'bg-gray-300' : ''}`}
-                  onClick={() => setSelectedTime(time)}
-                >
-                  {time}
-                </button>
-              ))} 
-              </div>
-              <textarea placeholder='직접입력 (분으로만 적어주세요)' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} onChange={handleTime}></textarea>
-            </div>
-            <div className="flex flex-row mt-[20px]">
-              <button
-                className="flex-1 h-[40px] rounded-md bg-gray-300 text-black mr-2"
-                onClick={handleDeleteAll}
-              >
-                Delete
-              </button>
-              <button
-                className="flex-1 h-[40px] rounded-md bg-black text-white"
-                onClick={addTodoItem}
-              >
-                Save
-              </button>
-            </div>
-          </div>
-          </div>
-        </div>
-      )}
+          <TaskModal
+            isEditTodoItem={isEditTodoItem}
+            isDarkMode={isDarkMode}
+            selectedColor={selectedColor}
+            setSelectedColor={setSelectedColor}
+            selectedTime={selectedTime}
+            setSelectedTime={setSelectedTime}
+            handleTime={handleTime}
+            handleDeleteAll={handleDeleteAll}
+            onSaveButtonClick={addTodoItem} 
+          />
+        )}
+
       {selectedTodoTask !== null && (
         <div className="flex flex-col max-w-[250px] max-h-[300px] items-center text-center justify-center relative">
           <div className={`flex flex-col max-h-[200px] items-center justify-center mb-4`}>
