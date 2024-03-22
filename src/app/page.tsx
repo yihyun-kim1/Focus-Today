@@ -30,6 +30,7 @@ export default function Home() {
   const [selectedTodoTask, setSelectedTodoTask] = useState<number | null>(null);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [storedItems, setStoredItems] = useState<TodoItem[]>([]); // 상태로 변경
+  const [isEditTodoItem, setIsEditTodoItem] = useState<boolean>(false); 
 
   useEffect(() => {
     const storedColor = localStorage.getItem('selectedColor');
@@ -106,6 +107,11 @@ const handleStartButtonClick = () => {
     }
   };
 
+  const editTodoItem = () => {
+    setIsEditTodoItem(true);
+    setShowModal(true)
+  }
+
   const handleDeleteAll = () => {
     setTodoItem([]);
     setStoredItems([]);
@@ -151,9 +157,12 @@ const handleStartButtonClick = () => {
         <div className='overflow-y-auto max-h-[calc(100vh - 100px)]'>
         {todoItem.map((item, index) => (
             <div key={index} style={{border:'1px solid #D8D8D8'}} className={`rounded-xl w-[380px] py-[10px] h-[136px] my-3 cursor-pointer ${selectedTodoTask === index ? 'border-' + item.selectedColor : ''}`} onClick={() => handleTodoTaskClick(index)}>
-            <div className='flex flex-row items-center'>
-              <div style={{backgroundColor: `${item.selectedColor}`}} className='mx-[10px] w-[16px] h-[16px] rounded-full'/>
-              <div  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>{item.selectedTime}min</div>
+            <div className='flex flex-row px-3 justify-between'>
+              <div className='flex flex-row items-center'>
+                <div style={{backgroundColor: `${item.selectedColor}`}} className='mr-[10px] w-[16px] h-[16px] rounded-full'/>
+                <div  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>{item.selectedTime}min</div>
+              </div>
+                <div onClick={editTodoItem}>Edit</div>
             </div>
             <br/>
             <div style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} className='my-[10px] mx-[10px] text-[20px] max-w-[380px] overflow-hidden truncate line-clamp-20'>
@@ -163,8 +172,8 @@ const handleStartButtonClick = () => {
         ))}
         </div>
         {showModal && (
-        <div className="absolute flex top-[68%] justify-center items-center">
-           <div className="absolute inset-x-0 bottom-0 w-[380px] bg-opacity-50 flex justify-start items-center">
+        <div className={`absolute flex top-[69%] ${isEditTodoItem ? 'left-[33%]' : ''} justify-center items-center`}>
+          <div className="absolute inset-x-0 bottom-0 w-[380px] bg-opacity-50 flex justify-start items-center">
           <div className="bg-white p-8 top-50% w-full h-[340px] flex rounded-xl flex-col" style={{border: '1px solid #000000'}}>
             <h2 className="text-lg font-semibold mb-4"  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>컬러</h2>
             <div className="flex flex-row w-[200px] h-[30px] my-2 ">
