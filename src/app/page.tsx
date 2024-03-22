@@ -206,9 +206,16 @@ const handleStartButtonClick = () => {
       </div>
       {selectedTodoTask !== null && (
         <div className="flex flex-col w-[300px] items-center text-center justify-center mr-[30px]">
-          <div className={`flex flex-col w-[300px] ml-[300px] max-h-[200px] items-center justify-center bg-${selectedColor} mb-4`}>
+          <div className={`flex flex-col w-[300px] ml-[300px] max-h-[200px] items-center justify-center mb-4`}>
           <div className={`w-full h-[100px] text-[60px] text-${selectedColor} mb-4`}>00:{selectedTime}:00</div>
-          <button className={`bg-${selectedColor}-500 w-[180px] h-[40px] text-white px-4 py-2 rounded-lg`} onClick={handleStartButtonClick}>Start</button>
+          <button
+            className={`${
+              selectedColor === 'black' ? 'bg-black' : `bg-${selectedColor}-500`
+            } w-[180px] h-[40px] text-white px-4 py-2 rounded-lg`}
+            onClick={handleStartButtonClick}
+          >
+            Start
+          </button>
           </div>
         </div>
       )}
