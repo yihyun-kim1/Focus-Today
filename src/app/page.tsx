@@ -92,6 +92,10 @@ const handleStartButtonClick = () => {
     setInputValue(event.target.value);
   };
 
+  const handleTime = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setSelectedTime(Number(event.target.value))
+  }
+
   const addTodoItem = () => {
     if (inputValue.trim() !== '') {
       const newItem: TodoItem = {
@@ -220,7 +224,7 @@ const handleStartButtonClick = () => {
                 </button>
               ))} 
               </div>
-              <textarea placeholder='직접입력' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}></textarea>
+              <textarea placeholder='직접입력 (분으로만 적어주세요)' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} onChange={handleTime}></textarea>
             </div>
             <div className="flex flex-row mt-[20px]">
               <button
