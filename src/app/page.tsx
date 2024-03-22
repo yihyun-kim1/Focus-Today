@@ -114,7 +114,14 @@ const handleStartButtonClick = () => {
 
   return (
 
-    <main className="flex min-h-screen flex-row bg-white ">
+    <main className="flex min-h-screen flex-col bg-white ">
+        <div className='flex flex-row mx-[200px] pt-[20px] items-center justify-between'>
+          <div className='flex flex-row items-center'>
+            <div style={{backgroundColor: 'black'}} className='mr-[10px] w-[16px] h-[16px] rounded-xl'/>
+            <div>focus today</div>
+          </div>
+          <div>Dark mode:</div>
+        </div>
       <div className="py-[100px] mx-[200px] w-[360px]">
         <h1 className='text-[40px]'>
         Hello,<br/>

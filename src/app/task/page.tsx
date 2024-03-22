@@ -56,15 +56,12 @@ export default function Task() {
             <div className="text-6xl text-white">{formatTime(countdown)}</div>
             <div className="mt-4">
         <div className='flex flex-col gap-y-[15px]'>
-        {/* {!isRunning ? ( */}
           <button className="bg-black w-[200px] text-white px-4 py-2 rounded-md mr-4" onClick={handleStart}>
             Start
           </button>
-        {/* ) : ( */}
           <button className="bg-black text-white px-4 py-2 rounded-md mr-4" onClick={handleStop}>
             Stop
           </button>
-        {/* )} */}
         </div>
       </div>
         </div>
