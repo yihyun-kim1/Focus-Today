@@ -171,7 +171,7 @@ export default function Home() {
     const selectedTask = todoItem[index];
     setSelectedColor(selectedTask.selectedColor);
     setSelectedTime(selectedTask.selectedTime);
-    console.log(selectedColor, selectedTask,selectedTime)
+    console.log(selectedColor, selectedTask, selectedTime)
     localStorage.setItem('selectedTime', selectedTime.toString());
     localStorage.setItem('selectedColor', selectedColor);
   };
@@ -194,24 +194,41 @@ const handleStartButtonClick = () => {
   }
 
   const addTodoItem = () => {
-    if (inputValue.trim() !== '') {
+    console.log('<<<<<<<<<<<<<<<<<<<<<<<<<')
+    if (inputValue.trim() !== '' || isEditTodoItem) {
       const newItem: TodoItem = {
-        text: inputValue,
-        selectedTime: selectedTime,
-        selectedColor: selectedColor
+        text: isEditTodoItem && selectedTodoTask !== null ? inputValue : (localStorage.text || inputValue),
+        selectedTime: isEditTodoItem && selectedTodoTask !== null ? selectedTime : localStorage.selectedTime || selectedTime,
+        selectedColor: isEditTodoItem && selectedTodoTask !== null ? selectedColor : localStorage.selectedColor || selectedColor
+      };
+
+      if (isEditTodoItem && selectedTodoTask !== null) {
+        // 수정 모달에서 저장 버튼을 누른 경우
+        const updatedItems = [...todoItem];
+        updatedItems[selectedTodoTask] = newItem;
+        setTodoItem(updatedItems);
+        setStoredItems(updatedItems);
+        console.log(updatedItems,'update!')
+      } else {
+        // 새로운 todo 항목을 추가하는 경우
+        setTodoItem([...todoItem, newItem]);
+        setStoredItems([...storedItems, newItem]);
       }
-      setTodoItem([...todoItem, newItem])
-      setStoredItems([...storedItems, newItem]);
+      
       setInputValue('');
-      setShowModal(false)
+      setShowModal(false);
+      setIsEditTodoItem(false);
+      setSelectedTodoTask(null);
       
     }
   };
 
-  const editTodoItem = () => {
+  const editTodoItem = (index: number) => {
+    setSelectedTodoTask(index); // 현재 선택된 todo 항목의 인덱스 저장
     setIsEditTodoItem(true);
-    setShowModal(true)
-  }
+    setShowModal(true);
+  };
+  
 
   const handleDeleteAll = () => {
     setTodoItem([]);
@@ -263,7 +280,7 @@ const handleStartButtonClick = () => {
                 <div style={{backgroundColor: `${item.selectedColor}`}} className='mr-[10px] w-[16px] h-[16px] rounded-full'/>
                 <div  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>{item.selectedTime}min</div>
               </div>
-                <div onClick={editTodoItem}>Edit</div>
+                <div onClick={()=>editTodoItem(index)}>Edit</div>
             </div>
             <br/>
             <div style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} className='my-[10px] mx-[10px] text-[20px] max-w-[380px] overflow-hidden truncate line-clamp-20'>
@@ -302,7 +319,7 @@ const handleStartButtonClick = () => {
           .relative {
             position: absolute;
             left: 60%;
-            bottom: 350px; // 오른쪽으로 150px 이동
+            bottom: 350px; 
           }
         `}</style>
         </div>
