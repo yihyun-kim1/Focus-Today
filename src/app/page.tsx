@@ -274,7 +274,15 @@ const handleStartButtonClick = () => {
         </div>
         <div className='overflow-y-auto max-h-[calc(100vh - 100px)]'>
         {todoItem.map((item, index) => (
-            <div key={index} style={{border:'1px solid #D8D8D8'}} className={`rounded-xl w-[380px] py-[10px] h-[136px] my-3 cursor-pointer ${selectedTodoTask === index ? 'border-' + item.selectedColor : ''}`} onClick={() => handleTodoTaskClick(index)}>
+            <div
+            key={index}
+            style={{ 
+              border: `1px solid ${selectedTodoTask === index ? `${item.selectedColor}` : '#D8D8D8'}`,
+              borderColor: selectedTodoTask === index ? `${item.selectedColor}` : '#D8D8D8'
+            }}
+            className={`rounded-xl w-[380px] py-[10px] h-[136px] my-3 cursor-pointer`}
+            onClick={() => handleTodoTaskClick(index)}
+          >
             <div className='flex flex-row px-3 justify-between'>
               <div className='flex flex-row items-center'>
                 <div style={{backgroundColor: `${item.selectedColor == 'black' && isDarkMode == true ? 'white' : item.selectedColor}`}} className='mr-[10px] w-[16px] h-[16px] rounded-full'/>
