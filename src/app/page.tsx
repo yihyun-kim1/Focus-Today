@@ -63,6 +63,10 @@ export default function Home() {
     localStorage.setItem('todoItems', JSON.stringify(todoItem));
   }, [todoItem]);
 
+  useEffect(() => {
+    console.log(isDarkMode, "dark?????????")
+  }, [isDarkMode]);
+
 
   const handleTodoTaskClick = (index: number) => {
     setSelectedTodoTask(index);
@@ -114,14 +118,14 @@ const handleStartButtonClick = () => {
 
   return (
 
-    <main className="flex min-h-screen w-full bg-white ">
+    <main className="flex min-h-screen w-full" style={{backgroundColor: `${!isDarkMode ? '#FFFFFF' : '#000000'}`}}>
       <div className='flex flex-col w-full mx-[200px]'>
         <div className='flex flex-row pt-[20px] items-center justify-between'>
           <div className='flex flex-row items-center'>
-            <div style={{backgroundColor: 'black'}} className='mr-[10px] w-[16px] h-[16px] rounded-xl'/>
-            <div>focus today</div>
+            <div style={{backgroundColor: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} className='mr-[10px] w-[16px] h-[16px] rounded-full'/>
+            <div style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>focus today</div>
           </div>
-          <div className='flex flex-row'>Dark mode:          
+          <div className='flex flex-row' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>Dark mode:          
           <button
             className={`ml-2 w-[40px] h-[20px] rounded-full bg-gray-300 relative focus:outline-none overflow-hidden transition-all duration-300 ${isDarkMode ? 'bg-white' : 'bg-gray-300'}`}
             onClick={toggleDarkMode}
@@ -132,7 +136,7 @@ const handleStartButtonClick = () => {
           </div>
         </div>
       <div className="">
-        <h1 className='text-[40px] mt-[30px]'>
+        <h1 className='text-[40px] mt-[30px]' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>
         Hello,<br/>
         let&apos;s focus today.</h1>
         <div className='flex w-[360px] mt-[50px]'>
@@ -141,17 +145,17 @@ const handleStartButtonClick = () => {
                       value={inputValue}
                       onChange={handleInputChange}
                       placeholder='Todo를 적어주세요.'></textarea>
-            <button className='w-[56px] h-[56px] ml-[20px] bg-black rounded-lg text-white text-[30px]' onClick={() => setShowModal(true)}>+</button>
+            <button className='w-[56px] h-[56px] ml-[20px] rounded-lg text-[30px]'  style={{color: `${!isDarkMode ? '#FFFFFF' : '#000000'}`, backgroundColor: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} onClick={() => setShowModal(true)}>+</button>
           </div>
         </div>
         {todoItem.map((item, index) => (
             <div key={index} className={`border-1 rounded-xl w-[380px] py-[10px] border-gray-700 h-[136px] my-8 cursor-pointer ${selectedTodoTask === index ? 'border-' + item.selectedColor : ''}`} onClick={() => handleTodoTaskClick(index)}>
             <div className='flex flex-row gap-x-[5px] items-center'>
               <div style={{backgroundColor: `${item.selectedColor}`}} className='mx-[10px] w-[16px] h-[16px] rounded-xl'/>
-              <div>{item.selectedTime}min</div>
+              <div  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>{item.selectedTime}min</div>
             </div>
             <br/>
-            <div className='my-[10px] mx-[10px] text-[20px] max-w-[380px] overflow-hidden truncate line-clamp-20'>
+            <div  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} className='my-[10px] mx-[10px] text-[20px] max-w-[380px] overflow-hidden truncate line-clamp-20'>
             {item.text}
             </div>
           </div>
@@ -159,7 +163,7 @@ const handleStartButtonClick = () => {
         {showModal && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-8 w-[360px] h-[400px] flex flex-col">
-            <h2 className="text-lg font-semibold mb-4">컬러</h2>
+            <h2 className="text-lg font-semibold mb-4"  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>컬러</h2>
             <div className="flex flex-row w-[200px] h-[30px] my-2 ">
               <button
                 className={`flex w-[30px] h-[30px] rounded-md bg-black text-white mr-2 ${selectedColor === 'black' ? 'border-2 border-gray-800' : ''}`}
@@ -188,7 +192,7 @@ const handleStartButtonClick = () => {
               </button>
             </div>
             <div className="flex flex-col">
-              <h2 className="text-lg font-semibold">시간</h2>
+              <h2 className="text-lg font-semibold"  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>시간</h2>
               <div className='flex flex-row'>
               {[10, 15, 20, 25, 30, 45, 55].map((time) => (
                 <button
@@ -200,7 +204,7 @@ const handleStartButtonClick = () => {
                 </button>
               ))} 
               </div>
-              <textarea placeholder='직접입력'></textarea>
+              <textarea placeholder='직접입력' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}></textarea>
             </div>
             <div className="flex flex-row mt-[20px]">
               <button
