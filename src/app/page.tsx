@@ -141,21 +141,21 @@ const handleStartButtonClick = () => {
         let&apos;s focus today.</h1>
         <div className='flex w-[360px] mt-[50px]'>
           <div className='flex flex-row'>
-            <textarea className='flex w-[296px] h-[56px] border-1 border-gray-500 text-start text-gray-700'  
+            <textarea className='flex w-[315px] h-[56px] border-1 rounded-lg px-5 py-4 text-start border-gray-500 text-gray-700'  style={{border: '1px solid #00000026'}}
                       value={inputValue}
                       onChange={handleInputChange}
                       placeholder='Todo를 적어주세요.'></textarea>
-            <button className='w-[56px] h-[56px] ml-[20px] rounded-lg text-[30px]'  style={{color: `${!isDarkMode ? '#FFFFFF' : '#000000'}`, backgroundColor: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} onClick={() => setShowModal(true)}>+</button>
+            <button className='w-[56px] h-[56px] ml-[10px] rounded-xl text-[30px]'  style={{color: `${!isDarkMode ? '#FFFFFF' : '#000000'}`, backgroundColor: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} onClick={() => setShowModal(true)}>+</button>
           </div>
         </div>
         {todoItem.map((item, index) => (
-            <div key={index} className={`border-1 rounded-xl w-[380px] py-[10px] border-gray-700 h-[136px] my-8 cursor-pointer ${selectedTodoTask === index ? 'border-' + item.selectedColor : ''}`} onClick={() => handleTodoTaskClick(index)}>
-            <div className='flex flex-row gap-x-[5px] items-center'>
-              <div style={{backgroundColor: `${item.selectedColor}`}} className='mx-[10px] w-[16px] h-[16px] rounded-xl'/>
+            <div key={index} style={{border:'1px solid #D8D8D8'}} className={`rounded-xl w-[380px] py-[10px] h-[136px] my-3 cursor-pointer ${selectedTodoTask === index ? 'border-' + item.selectedColor : ''}`} onClick={() => handleTodoTaskClick(index)}>
+            <div className='flex flex-row items-center'>
+              <div style={{backgroundColor: `${item.selectedColor}`}} className='mx-[10px] w-[16px] h-[16px] rounded-full'/>
               <div  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>{item.selectedTime}min</div>
             </div>
             <br/>
-            <div  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} className='my-[10px] mx-[10px] text-[20px] max-w-[380px] overflow-hidden truncate line-clamp-20'>
+            <div style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} className='my-[10px] mx-[10px] text-[20px] max-w-[380px] overflow-hidden truncate line-clamp-20'>
             {item.text}
             </div>
           </div>
