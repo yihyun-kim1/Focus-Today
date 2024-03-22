@@ -183,23 +183,27 @@ const handleStartButtonClick = () => {
               >
               </button>
               <button
-                className={`flex bg-pink-500 w-[30px] h-[30px] rounded-md text-white mr-2 ${selectedColor === 'pink' ? 'border-2 border-gray-800' : ''}`}
-                onClick={() => setSelectedColor('pink')}
+                className={`flex w-[30px] h-[30px] rounded-md text-white mr-2 ${selectedColor === 'pink' ? 'border-2 border-gray-800' : ''}`}
+                style={{backgroundColor: '#EE81C8'}}
+                onClick={() => setSelectedColor('#EE81C8')}
               >
               </button>
               <button
-                className={`flex bg-orange-500 w-[30px] h-[30px] rounded-md text-white mr-2 ${selectedColor === 'orange' ? 'border-2 border-gray-800' : ''}`}
-                onClick={() => setSelectedColor('orange')}
+                className={`flex w-[30px] h-[30px] rounded-md text-white mr-2 ${selectedColor === 'orange' ? 'border-2 border-gray-800' : ''}`}
+                style={{backgroundColor: '#FF734B'}}
+                onClick={() => setSelectedColor('#FF734B')}
               >
               </button>
               <button
-                className={`flex bg-yellow-500 w-[30px] h-[30px] rounded-md text-white mr-2 ${selectedColor === 'yellow' ? 'border-2 border-gray-800' : ''}`}
-                onClick={() => setSelectedColor('yellow')}
+                className={`flex w-[30px] h-[30px] rounded-md text-white mr-2 ${selectedColor === 'yellow' ? 'border-2 border-gray-800' : ''}`}
+                style={{backgroundColor: '#FFD44F'}}
+                onClick={() => setSelectedColor('#FFD44F')}
               >
               </button>
               <button
-                className={`flex bg-green-500 w-[30px] h-[30px] rounded-md text-white ${selectedColor === 'green' ? 'border-2 border-gray-800' : ''}`}
-                onClick={() => setSelectedColor('green')}
+                className={`flex w-[30px] h-[30px] rounded-md text-white ${selectedColor === 'green' ? 'border-2 border-gray-800' : ''}`}
+                style={{backgroundColor: '#35C792'}}
+                onClick={() => setSelectedColor('#35C792')}
               >
               </button>
             </div>
@@ -241,9 +245,8 @@ const handleStartButtonClick = () => {
           <div className={`flex flex-col max-h-[200px] items-center justify-center mb-4`}>
           <div className={`w-full h-[100px] text-[60px] text-${selectedColor} mb-4`}>00:{selectedTime}:00</div>
           <button
-            className={`${
-              selectedColor === 'black' ? 'bg-black' : `bg-${selectedColor}-500`
-            } w-[180px] h-[40px] text-white px-4 py-2 rounded-lg`}
+            className='w-[180px] h-[40px] text-white px-4 py-2 rounded-lg'
+            style={{backgroundColor: selectedColor}}
             onClick={handleStartButtonClick}
           >
             Start

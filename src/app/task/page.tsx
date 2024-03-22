@@ -52,7 +52,7 @@ export default function Task() {
     };
   
     return (
-        <div className={`w-full h-screen flex flex-col items-center justify-center bg-${selectedColor}-500`}>
+        <div className='w-full h-screen flex flex-col items-center justify-center' style={{backgroundColor:selectedColor}}>
             <div className="text-6xl text-white">{formatTime(countdown)}</div>
             <div className="mt-4">
         <div className='flex flex-col gap-y-[15px]'>
