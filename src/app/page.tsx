@@ -197,7 +197,14 @@ const handleStartButtonClick = () => {
     console.log('<<<<<<<<<<<<<<<<<<<<<<<<<')
     if (inputValue.trim() !== '' || isEditTodoItem) {
       const newItem: TodoItem = {
-        text: (isEditTodoItem && selectedTodoTask !== null && inputValue.trim() !== '') ? inputValue : (selectedTodoTask !== null ? todoItem[selectedTodoTask].text : ''),
+        text: (!isEditTodoItem && inputValue.trim() !== '') 
+        ? inputValue 
+        : (isEditTodoItem && selectedTodoTask !== null && inputValue.trim() !== '') 
+          ? inputValue 
+          : (isEditTodoItem && selectedTodoTask !== null) 
+            ? todoItem[selectedTodoTask].text 
+            : '',
+      
         selectedTime: isEditTodoItem && selectedTodoTask !== null ? selectedTime : localStorage.selectedTime || selectedTime,
         selectedColor: isEditTodoItem && selectedTodoTask !== null ? selectedColor : localStorage.selectedColor || selectedColor
       };
