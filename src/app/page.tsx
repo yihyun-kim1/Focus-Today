@@ -197,7 +197,7 @@ const handleStartButtonClick = () => {
     console.log('<<<<<<<<<<<<<<<<<<<<<<<<<')
     if (inputValue.trim() !== '' || isEditTodoItem) {
       const newItem: TodoItem = {
-        text: isEditTodoItem && selectedTodoTask !== null ? inputValue : (localStorage.text || inputValue),
+        text: (isEditTodoItem && selectedTodoTask !== null && inputValue.trim() !== '') ? inputValue : (selectedTodoTask !== null ? todoItem[selectedTodoTask].text : ''),
         selectedTime: isEditTodoItem && selectedTodoTask !== null ? selectedTime : localStorage.selectedTime || selectedTime,
         selectedColor: isEditTodoItem && selectedTodoTask !== null ? selectedColor : localStorage.selectedColor || selectedColor
       };
@@ -277,7 +277,7 @@ const handleStartButtonClick = () => {
             <div key={index} style={{border:'1px solid #D8D8D8'}} className={`rounded-xl w-[380px] py-[10px] h-[136px] my-3 cursor-pointer ${selectedTodoTask === index ? 'border-' + item.selectedColor : ''}`} onClick={() => handleTodoTaskClick(index)}>
             <div className='flex flex-row px-3 justify-between'>
               <div className='flex flex-row items-center'>
-                <div style={{backgroundColor: `${item.selectedColor}`}} className='mr-[10px] w-[16px] h-[16px] rounded-full'/>
+                <div style={{backgroundColor: `${item.selectedColor == 'black' && isDarkMode == true ? 'white' : item.selectedColor}`}} className='mr-[10px] w-[16px] h-[16px] rounded-full'/>
                 <div  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>{item.selectedTime}min</div>
               </div>
                 <div onClick={()=>editTodoItem(index)}>Edit</div>
@@ -306,10 +306,10 @@ const handleStartButtonClick = () => {
       {selectedTodoTask !== null && (
         <div className="flex flex-col max-w-[250px] max-h-[300px] items-center text-center justify-center relative">
           <div className={`flex flex-col max-h-[200px] items-center justify-center mb-4`}>
-          <div className={`w-full h-[100px] text-[60px] text-${selectedColor} mb-4`}>00:{selectedTime}:00</div>
+          <div className={`w-full h-[100px] text-[60px] mb-4`} style={{ color: `${isDarkMode && selectedColor === 'black' ? '#FFFFFF' : selectedColor}` }}>00:{selectedTime}:00</div>
           <button
-            className='w-[180px] h-[40px] text-white px-4 py-2 rounded-lg'
-            style={{backgroundColor: selectedColor}}
+            className={`w-[180px] h-[40px] text-${isDarkMode==true ? 'black' : 'white'} px-4 py-2 rounded-lg`}
+            style={{backgroundColor: `${selectedColor == 'black' && isDarkMode == true ? 'white' : selectedColor}`}}
             onClick={handleStartButtonClick}
           >
             Start
