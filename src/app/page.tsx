@@ -114,16 +114,17 @@ const handleStartButtonClick = () => {
 
   return (
 
-    <main className="flex min-h-screen flex-col bg-white ">
-        <div className='flex flex-row mx-[200px] pt-[20px] items-center justify-between'>
+    <main className="flex min-h-screen w-full bg-white ">
+      <div className='flex flex-col w-full mx-[200px]'>
+        <div className='flex flex-row pt-[20px] items-center justify-between'>
           <div className='flex flex-row items-center'>
             <div style={{backgroundColor: 'black'}} className='mr-[10px] w-[16px] h-[16px] rounded-xl'/>
             <div>focus today</div>
           </div>
           <div>Dark mode:</div>
         </div>
-      <div className="py-[100px] mx-[200px] w-[360px]">
-        <h1 className='text-[40px]'>
+      <div className="">
+        <h1 className='text-[40px] mt-[30px]'>
         Hello,<br/>
         let&apos;s focus today.</h1>
         <div className='flex w-[360px] mt-[50px]'>
@@ -210,10 +211,9 @@ const handleStartButtonClick = () => {
           </div>
         </div>
       )}
-      </div>
       {selectedTodoTask !== null && (
-        <div className="flex flex-col w-[300px] items-center text-center justify-center mr-[30px]">
-          <div className={`flex flex-col w-[300px] ml-[300px] max-h-[200px] items-center justify-center mb-4`}>
+        <div className="flex flex-col max-w-[250px] max-h-[300px] items-center text-center justify-center relative">
+          <div className={`flex flex-col max-h-[200px] items-center justify-center mb-4`}>
           <div className={`w-full h-[100px] text-[60px] text-${selectedColor} mb-4`}>00:{selectedTime}:00</div>
           <button
             className={`${
@@ -224,8 +224,17 @@ const handleStartButtonClick = () => {
             Start
           </button>
           </div>
+          <style jsx>{`
+          .relative {
+            position: absolute;
+            left: 60%;
+            bottom: 350px; // 오른쪽으로 150px 이동
+          }
+        `}</style>
         </div>
       )}
+      </div>
+      </div>
     </main>
   );
 }
