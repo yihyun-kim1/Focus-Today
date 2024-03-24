@@ -143,13 +143,15 @@ export default function Home() {
   const initialSelectedTime = selectedTimeFromStorage ? parseInt(selectedTimeFromStorage) : 10;
   const [selectedTime, setSelectedTime] = useState<number>(initialSelectedTime);
   const [selectedTodoTask, setSelectedTodoTask] = useState<number | null>(null);
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const initialDarkMode = typeof window !== 'undefined' ? localStorage.getItem('isDarkMode') === 'true' : false;
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(initialDarkMode);
   const [storedItems, setStoredItems] = useState<TodoItem[]>([]); // 상태로 변경
   const [isEditTodoItem, setIsEditTodoItem] = useState<boolean>(false); 
 
   useEffect(() => {
     const storedColor = localStorage.getItem('selectedColor');
     const storedTime = localStorage.getItem('selectedTime');
+    const storedDarkMode = localStorage.getItem('isDarkMode');
 
     if (storedColor) {
       setSelectedColor(storedColor);
@@ -157,7 +159,10 @@ export default function Home() {
     if (storedTime) {
       setSelectedTime(parseInt(storedTime));
     }
-
+    if (storedDarkMode) {
+      setIsDarkMode(storedDarkMode === 'true');
+    }
+    
     const storedItemsJson = localStorage.getItem('todoItems');
     if (storedItemsJson) {
       const parsedItems = JSON.parse(storedItemsJson);
@@ -180,8 +185,9 @@ export default function Home() {
   }, [todoItem]);
 
   useEffect(() => {
-    console.log(isDarkMode, "dark?????????")
+    localStorage.setItem('isDarkMode', isDarkMode.toString());
   }, [isDarkMode]);
+
 
 
   const handleTodoTaskClick = (index: number) => {

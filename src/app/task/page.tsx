@@ -8,7 +8,9 @@ import { LogoAndMode } from '../page';
 export default function Task() {
   const pathname = usePathname();
   const router = useRouter();
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(
+    typeof window !== 'undefined' ? localStorage.getItem('isDarkMode') === 'true' : false
+  );  
   const selectedColor = typeof window !== 'undefined' ? localStorage.getItem('selectedColor') || 'black' : 'black'; 
   const [countdown, setCountdown] = useState(typeof window !== 'undefined' ? Number(localStorage.getItem('selectedTime') || 10) * 60 : 10 * 60); 
   const [timerId, setTimerId] = useState<number | null>(null); // 타이머 ID
@@ -17,11 +19,9 @@ export default function Task() {
 
   useEffect(() => {
     // URL 쿼리 매개변수 파싱
-    console.log(selectedColor)
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const isDarkModeParam = urlParams.get('isDarkMode');
-    setIsDarkMode(isDarkModeParam === 'true'); 
   }, []);
 
   useEffect(() => {
@@ -82,8 +82,12 @@ export default function Task() {
     };
     
     const toggleDarkMode = () => {
-      setIsDarkMode(!isDarkMode); // dark mode 상태를 반전시킵니다.
+      setIsDarkMode(!isDarkMode); 
     };
+    
+    useEffect(() => {
+      localStorage.setItem('isDarkMode', isDarkMode.toString());
+    }, [isDarkMode]);
   
     return (
       <main className='flex min-h-screen flex-col' style={{backgroundColor:selectedColor}}>
