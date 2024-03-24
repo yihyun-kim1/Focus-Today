@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import './globals.css';
+import { LogoAndMode } from '@/components/LogoAndMode';
 
 interface TodoItem {
   text: string
@@ -23,26 +24,6 @@ interface TaskModalProps {
   handleTime: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDeleteAll: () => void;
   onSaveButtonClick: () => void;
-}
-
-export const LogoAndMode = ({ isDarkMode, toggleDarkMode }: { isDarkMode: boolean; toggleDarkMode: () => void }) => {
-  return (
-    <div className='flex flex-row pt-[20px] items-center justify-between'>
-    <div className='flex flex-row items-center'>
-      <div style={{backgroundColor: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} className='mr-[10px] w-[16px] h-[16px] rounded-full'/>
-      <div style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>focus today</div>
-    </div>
-    <div className='flex flex-row' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>Dark mode:          
-    <button
-      className={`ml-2 w-[40px] h-[20px] rounded-full bg-gray-300 relative focus:outline-none overflow-hidden transition-all duration-300 ${isDarkMode ? 'bg-white' : 'bg-gray-300'}`}
-      onClick={toggleDarkMode}
-    >
-      <div className={`left-1 w-[15px] h-[15px] items-center rounded-full transition-transform duration-300 transform ${isDarkMode ? 'translate-x-[20px] bg-black' : 'translate-x-1  bg-white'}`}></div>
-    </button>
-
-    </div>
-  </div>
-  )
 }
 
 const TaskModal: React.FC<TaskModalProps & { inputValue: string }> = ({
@@ -67,7 +48,7 @@ const TaskModal: React.FC<TaskModalProps & { inputValue: string }> = ({
 };
   
 return (
-  <div className={`absolute flex top-[66.5%] ${isEditTodoItem ? 'left-[33%]' : ''} justify-center items-center`}>
+  <div className={`absolute flex top-[69%] ${isEditTodoItem ? 'left-[33%]' : ''} justify-center items-center`}>
     <div className="absolute inset-x-0 bottom-0 w-[380px] bg-opacity-50 flex justify-start items-center">
     <div className="p-8 top-50% w-full h-[340px] flex rounded-xl flex-col" style={{border: `1px solid ${isDarkMode ? '#FFFFFF' : '#000000'}`, backgroundColor: `${!isDarkMode? '#FFFFFF' : '#000000'}`}}>
       <h2 className="text-lg" style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>컬러</h2>
@@ -108,7 +89,7 @@ return (
         {[10, 15, 20, 25, 30, 45, 55].map((time) => (
           <button
             key={time}
-            className={`flex mt-[10px] w-[35px] h-[44px] text-center items-center justify-center bg-gray-300 border rounded-md mr-2 mb-2 text-[17px] ${selectedTime === time ? 'bg-gray-300' : ''}`}
+            className={`flex mt-[10px] w-[35px] h-[44px] text-center items-center justify-center border rounded-md mr-2 mb-2 text-[17px] ${selectedTime === time ? 'bg-black text-white' : 'text-black bg-gray-300'}`}
             onClick={() => {
               setSelectedTime(time);
               setTimeValue(time); 
@@ -165,7 +146,7 @@ export default function Home() {
   const router = useRouter(); 
   const pathname = usePathname();
   const getInitialTodoItems = (): TodoItem[] => {
-    const storedItemsJson = localStorage.getItem('todoItems');
+    const storedItemsJson = typeof window !== 'undefined' ? localStorage.getItem('todoItems') : null;
     return storedItemsJson ? JSON.parse(storedItemsJson) : [];
   };
   
@@ -187,9 +168,9 @@ export default function Home() {
   const [isEditTodoItem, setIsEditTodoItem] = useState<boolean>(false); 
 
   useEffect(() => {
-    const storedColor = localStorage.getItem('selectedColor');
-    const storedTime = localStorage.getItem('selectedTime');
-    const storedDarkMode = localStorage.getItem('isDarkMode');
+    const storedColor = typeof window !== 'undefined' ? localStorage.getItem('selectedColor') : null;
+    const storedTime = typeof window !== 'undefined' ? localStorage.getItem('selectedTime') : null;
+    const storedDarkMode = typeof window !== 'undefined' ? localStorage.getItem('isDarkMode') : null;
 
     if (storedColor) {
       setSelectedColor(storedColor);
@@ -201,7 +182,7 @@ export default function Home() {
       setIsDarkMode(storedDarkMode === 'true');
     }
     
-    const storedItemsJson = localStorage.getItem('todoItems');
+    const storedItemsJson = typeof window !== 'undefined' ? localStorage.getItem('todoItems') : null;
     if (storedItemsJson) {
       const parsedItems = JSON.parse(storedItemsJson);
       setTodoItem(parsedItems); // 초기 todoItem 상태 설정
@@ -211,19 +192,19 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('selectedColor', selectedColor);
+    typeof window !== 'undefined' ? localStorage.setItem('selectedColor', selectedColor) : null;
   }, [selectedColor]);
 
   useEffect(() => {
-    localStorage.setItem('selectedTime', selectedTime.toString());
+    typeof window !== 'undefined' ? localStorage.setItem('selectedTime', selectedTime.toString()) : null;
   }, [selectedTime]);
 
   useEffect(() => {
-    localStorage.setItem('todoItems', JSON.stringify(todoItem));
+    typeof window !== 'undefined' ?localStorage.setItem('todoItems', JSON.stringify(todoItem)) : null;
   }, [todoItem]);
 
   useEffect(() => {
-    localStorage.setItem('isDarkMode', isDarkMode.toString());
+    typeof window !== 'undefined' ?localStorage.setItem('isDarkMode', isDarkMode.toString()) : null;
   }, [isDarkMode]);
 
 
@@ -246,7 +227,6 @@ const handleStartButtonClick = () => {
   }
 };
 
-
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const trimmedValue = event.target.value.trim();
     setInputValue(trimmedValue); 
@@ -261,7 +241,6 @@ const handleStartButtonClick = () => {
   
 
   const addTodoItem = () => {
-    console.log('<<<<<<<<<<<<<<<<<<<<<<<<<')
     if ((selectedTime > 0 && selectedColor && inputValue.trim() !== '') || isEditTodoItem) {
       const newItem: TodoItem = {
         text: (!isEditTodoItem && selectedTime > 0 && selectedColor && inputValue.trim() !== '') 
@@ -325,8 +304,9 @@ const handleStartButtonClick = () => {
         <LogoAndMode isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode}/>
       <div className="mt-[40px] overflow-y-auto max-h-[calc(100vh - 40px)]">
         <h1 className='text-[40px] mt-[30px]' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>
-        Hello,<br/>
-        let&apos;s focus today.</h1>
+          Hello,<br/>
+          let&apos;s focus today.
+        </h1>
         <div className='flex w-[360px] mt-[50px]' onClick={() => setShowModal(true)}>
           <div className='flex flex-row'>
             <textarea className='flex w-[315px] h-[56px] border-1 rounded-lg px-5 py-4 text-start border-gray-500 text-gray-700'  style={{border: '1px solid #00000026'}}

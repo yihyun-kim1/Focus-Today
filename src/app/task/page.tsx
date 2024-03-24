@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
 import '../globals.css';
-import { LogoAndMode } from '../page';
+import { LogoAndMode } from '@/components/LogoAndMode';
 
 export default function Task() {
   const pathname = usePathname();
