@@ -17,7 +17,7 @@ interface TaskModalProps {
   setSelectedColor: (color: string) => void;
   selectedTime: number;
   setSelectedTime: (time: number) => void;
-  handleTime: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  handleTime: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDeleteAll: () => void;
   onSaveButtonClick: () => void;
 }
@@ -42,7 +42,7 @@ export const LogoAndMode = ({ isDarkMode, toggleDarkMode }: { isDarkMode: boolea
   )
 }
 
-const TaskModal: React.FC<TaskModalProps> = ({
+const TaskModal: React.FC<TaskModalProps & { inputValue: string }> = ({
   isEditTodoItem,
   isDarkMode,
   selectedColor,
@@ -52,12 +52,13 @@ const TaskModal: React.FC<TaskModalProps> = ({
   handleTime,
   handleDeleteAll,
   onSaveButtonClick,
+  inputValue,
   }) => {
 return (
   <div className={`absolute flex top-[66.5%] ${isEditTodoItem ? 'left-[33%]' : ''} justify-center items-center`}>
     <div className="absolute inset-x-0 bottom-0 w-[380px] bg-opacity-50 flex justify-start items-center">
     <div className="bg-white p-8 top-50% w-full h-[340px] flex rounded-xl flex-col" style={{border: '1px solid #000000'}}>
-      <h2 className="text-lg font-semibold mb-4"  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>컬러</h2>
+      <h2 className="text-lg"  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>컬러</h2>
       <div className="flex flex-row w-[200px] h-[30px] my-2 ">
         <button
           className={`flex w-[30px] h-[30px] rounded-md bg-black text-white mr-2 ${selectedColor === 'black' ? 'border-2 border-gray-800' : ''}`}
@@ -90,21 +91,27 @@ return (
         </button>
       </div>
       <div className="flex flex-col">
-        <h2 className="text-lg font-semibold"  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>시간</h2>
+        <h2 className="mt-[10px] text-lg"  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>포커스 시간</h2>
         <div className='flex flex-row'>
         {[10, 15, 20, 25, 30, 45, 55].map((time) => (
           <button
             key={time}
-            className={`flex mt-[10px] w-[30px] h-[30px] text-center items-center justify-center bg-gray-300 border rounded-md mr-2 mb-2 ${selectedTime === time ? 'bg-gray-300' : ''}`}
+            className={`flex mt-[10px] w-[35px] h-[44px] text-center items-center justify-center bg-gray-300 border rounded-md mr-2 mb-2 text-[17px] ${selectedTime === time ? 'bg-gray-300' : ''}`}
             onClick={() => setSelectedTime(time)}
           >
             {time}
           </button>
         ))} 
         </div>
-        <textarea placeholder='직접입력 (분으로만 적어주세요)' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} onChange={handleTime}></textarea>
+        <input
+          placeholder='직접입력 (분으로만 적어주세요)'
+          style={{ color: isDarkMode ? '#FFFFFF' : '#000000', border: '1px solid #D8DADC' }}
+          onChange={(event) => handleTime(event)}
+          className='text-start h-[50px] pl-4 mt-2 items-center rounded-lg'
+        />
+
       </div>
-      <div className="flex flex-row mt-[20px]">
+      <div className="flex flex-row mt-[12px]">
         <button
           className="flex-1 h-[40px] rounded-md bg-gray-300 text-black mr-2"
           onClick={handleDeleteAll}
@@ -112,7 +119,11 @@ return (
           Delete
         </button>
         <button
-          className="flex-1 h-[40px] rounded-md bg-black text-white"
+          className={`flex-1 h-[40px] rounded-md ${
+            selectedTime && selectedColor && inputValue.length > 0
+            ? 'bg-black text-white' 
+            : 'bg-gray-300 text-black'
+          }`}
           onClick={onSaveButtonClick}
         >
           Save
@@ -210,12 +221,14 @@ const handleStartButtonClick = () => {
 
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputValue(event.target.value);
+    const trimmedValue = event.target.value.trim();
+    setInputValue(trimmedValue); 
   };
 
-  const handleTime = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setSelectedTime(Number(event.target.value))
-  }
+  const handleTime = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedTime(Number(event.target.value));
+  };
+  
 
   const addTodoItem = () => {
     console.log('<<<<<<<<<<<<<<<<<<<<<<<<<')
@@ -304,7 +317,7 @@ const handleStartButtonClick = () => {
                 <div style={{backgroundColor: `${item.selectedColor == 'black' && isDarkMode == true ? 'white' : item.selectedColor}`}} className='mr-[10px] w-[16px] h-[16px] rounded-full'/>
                 <div  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>{item.selectedTime}min</div>
               </div>
-                <div onClick={()=>editTodoItem(index)}>Edit</div>
+                <div onClick={()=>editTodoItem(index)} style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>Edit</div>
             </div>
             <br/>
             <div style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} className='my-[10px] mx-[10px] text-[20px] max-w-[380px] overflow-hidden truncate line-clamp-20'>
@@ -315,16 +328,15 @@ const handleStartButtonClick = () => {
         </div>
         {showModal && (
           <TaskModal
-            isEditTodoItem={isEditTodoItem}
-            isDarkMode={isDarkMode}
-            selectedColor={selectedColor}
-            setSelectedColor={setSelectedColor}
-            selectedTime={selectedTime}
-            setSelectedTime={setSelectedTime}
-            handleTime={handleTime}
-            handleDeleteAll={handleDeleteAll}
-            onSaveButtonClick={addTodoItem} 
-          />
+              isEditTodoItem={isEditTodoItem}
+              isDarkMode={isDarkMode}
+              selectedColor={selectedColor}
+              setSelectedColor={setSelectedColor}
+              selectedTime={selectedTime}
+              setSelectedTime={setSelectedTime}
+              handleTime={handleTime}
+              handleDeleteAll={handleDeleteAll}
+              onSaveButtonClick={addTodoItem} inputValue={''}          />
         )}
 
       {selectedTodoTask !== null && (
