@@ -56,7 +56,7 @@ const handleEditInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   const trimmedValue = event.target.value;
   setEditInputValue(trimmedValue);
   setInputValue(trimmedValue)
-  handleInputChange(trimmedValue); 
+  // handleInputChange(trimmedValue); 
 };
 
 useEffect(() => {
