@@ -15,8 +15,11 @@ interface TaskModalProps {
   isDarkMode: boolean;
   selectedColor: string;
   setSelectedColor: (color: string) => void;
+  setInputValue: (inputValue: string) => void;
   selectedTime: number;
   setSelectedTime: (time: number) => void;
+  timeValue: number | null,
+  setTimeValue: (time: number | null) => void;
   handleTime: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDeleteAll: () => void;
   onSaveButtonClick: () => void;
@@ -53,12 +56,21 @@ const TaskModal: React.FC<TaskModalProps & { inputValue: string }> = ({
   handleDeleteAll,
   onSaveButtonClick,
   inputValue,
+  setInputValue,
+  timeValue,
+  setTimeValue,
   }) => {
+
+  const clearTimeValue = () => {
+  setSelectedTime(Number(0));// 이미지 클릭 시 입력 필드의 값을 지움
+  setTimeValue(0)
+};
+  
 return (
   <div className={`absolute flex top-[66.5%] ${isEditTodoItem ? 'left-[33%]' : ''} justify-center items-center`}>
     <div className="absolute inset-x-0 bottom-0 w-[380px] bg-opacity-50 flex justify-start items-center">
-    <div className="bg-white p-8 top-50% w-full h-[340px] flex rounded-xl flex-col" style={{border: '1px solid #000000'}}>
-      <h2 className="text-lg"  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>컬러</h2>
+    <div className="p-8 top-50% w-full h-[340px] flex rounded-xl flex-col" style={{border: `1px solid ${isDarkMode ? '#FFFFFF' : '#000000'}`, backgroundColor: `${!isDarkMode? '#FFFFFF' : '#000000'}`}}>
+      <h2 className="text-lg" style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>컬러</h2>
       <div className="flex flex-row w-[200px] h-[30px] my-2 ">
         <button
           className={`flex w-[30px] h-[30px] rounded-md bg-black text-white mr-2 ${selectedColor === 'black' ? 'border-2 border-gray-800' : ''}`}
@@ -91,24 +103,38 @@ return (
         </button>
       </div>
       <div className="flex flex-col">
-        <h2 className="mt-[10px] text-lg"  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>포커스 시간</h2>
+        <h2 className="mt-[10px] text-lg" style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>포커스 시간</h2>
         <div className='flex flex-row'>
         {[10, 15, 20, 25, 30, 45, 55].map((time) => (
           <button
             key={time}
             className={`flex mt-[10px] w-[35px] h-[44px] text-center items-center justify-center bg-gray-300 border rounded-md mr-2 mb-2 text-[17px] ${selectedTime === time ? 'bg-gray-300' : ''}`}
-            onClick={() => setSelectedTime(time)}
+            onClick={() => {
+              setSelectedTime(time);
+              setTimeValue(time); 
+            }}
           >
             {time}
           </button>
         ))} 
         </div>
-        <input
-          placeholder='직접입력 (분으로만 적어주세요)'
-          style={{ color: isDarkMode ? '#FFFFFF' : '#000000', border: '1px solid #D8DADC' }}
-          onChange={(event) => handleTime(event)}
-          className='text-start h-[50px] pl-4 mt-2 items-center rounded-lg'
-        />
+        <div className="relative mt-2">
+          <input
+            type="number"
+            value={timeValue !== null ? timeValue.toString() : ''}
+            placeholder='직접입력 (분으로만 적어주세요)'
+            style={{ color: isDarkMode ? '#FFFFFF' : '#000000', border: '1px solid #D8DADC' }}
+            onChange={(event) => handleTime(event)}
+            className='text-start h-[50px] w-full pl-4 pr-10 items-center rounded-lg'
+          />
+          <img
+            src='/close.svg'
+            alt='Close'
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
+            onClick={clearTimeValue}
+          />
+        </div>
+
 
       </div>
       <div className="flex flex-row mt-[12px]">
@@ -120,9 +146,9 @@ return (
         </button>
         <button
           className={`flex-1 h-[40px] rounded-md ${
-            selectedTime && selectedColor && inputValue.length > 0
-            ? 'bg-black text-white' 
-            : 'bg-gray-300 text-black'
+            (((timeValue !== null && timeValue > 0) || (selectedTime > 0)) && selectedColor && inputValue.length > 0)
+              ? 'bg-black text-white' 
+              : 'bg-gray-300 text-black'
           }`}
           onClick={onSaveButtonClick}
         >
@@ -146,6 +172,7 @@ export default function Home() {
   const [todoItem, setTodoItem] = useState<TodoItem[]>(getInitialTodoItems);
   
   const [inputValue, setInputValue] = useState<string>('');
+  const [timeValue, setTimeValue] = useState<number|null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedColor, setSelectedColor] = useState<string>(
     typeof window !== 'undefined' ? localStorage.getItem('selectedColor') || 'black' : 'black'
@@ -226,17 +253,20 @@ const handleStartButtonClick = () => {
   };
 
   const handleTime = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedTime(Number(event.target.value));
+    const inputValue = event.target.value;
+    const parsedValue = inputValue !== '' ? parseInt(inputValue) : null;
+    setTimeValue(parsedValue);
+    setSelectedTime(parsedValue || 0);
   };
   
 
   const addTodoItem = () => {
     console.log('<<<<<<<<<<<<<<<<<<<<<<<<<')
-    if (inputValue.trim() !== '' || isEditTodoItem) {
+    if ((selectedTime > 0 && selectedColor && inputValue.trim() !== '') || isEditTodoItem) {
       const newItem: TodoItem = {
-        text: (!isEditTodoItem && inputValue.trim() !== '') 
+        text: (!isEditTodoItem && selectedTime > 0 && selectedColor && inputValue.trim() !== '') 
         ? inputValue 
-        : (isEditTodoItem && selectedTodoTask !== null && inputValue.trim() !== '') 
+        : (isEditTodoItem && selectedTodoTask !== null && selectedTime > 0 && selectedColor && inputValue.trim() !== '') 
           ? inputValue 
           : (isEditTodoItem && selectedTodoTask !== null) 
             ? todoItem[selectedTodoTask].text 
@@ -258,12 +288,15 @@ const handleStartButtonClick = () => {
         setTodoItem([...todoItem, newItem]);
         setStoredItems([...storedItems, newItem]);
       }
-      
+      console.log(inputValue, selectedTime,selectedColor,'update!')
       setInputValue('');
       setShowModal(false);
       setIsEditTodoItem(false);
       setSelectedTodoTask(null);
       
+    }
+    else {
+      alert('포커스 시간을 1분 이상 선택해주세요.');
     }
   };
 
@@ -276,6 +309,8 @@ const handleStartButtonClick = () => {
 
   const handleDeleteAll = () => {
     setInputValue('')
+    setSelectedColor('')
+    setSelectedTime(0)
     setShowModal(false);
   };
 
@@ -334,9 +369,13 @@ const handleStartButtonClick = () => {
               setSelectedColor={setSelectedColor}
               selectedTime={selectedTime}
               setSelectedTime={setSelectedTime}
+              timeValue={timeValue}
+              setTimeValue={setTimeValue}
+              setInputValue={setInputValue}
               handleTime={handleTime}
               handleDeleteAll={handleDeleteAll}
-              onSaveButtonClick={addTodoItem} inputValue={''}          />
+              onSaveButtonClick={addTodoItem} 
+              inputValue={inputValue}          />
         )}
 
       {selectedTodoTask !== null && (
