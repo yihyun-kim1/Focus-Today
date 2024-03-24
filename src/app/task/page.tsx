@@ -90,22 +90,32 @@ export default function Task() {
     }, [isDarkMode]);
   
     return (
-      <main className='flex min-h-screen flex-col' style={{backgroundColor:selectedColor}}>
-      <div className='mx-[200px]'><LogoAndMode isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode}/></div>
+      <main className='flex min-h-screen flex-col' style={{backgroundColor: `${selectedColor !== 'black' ? selectedColor : isDarkMode ? 'white' : 'black'}`, color: `${selectedColor === 'black' && !isDarkMode ? 'white' : 'black'}`}}>
+        <div className='mx-[200px]'><LogoAndMode isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode}/></div>
         <div className='w-full h-screen flex flex-col items-center justify-center'>
-            <div className="text-6xl text-white">{formatTime(countdown)}</div>
-              <div className="mt-4">
-                <div className='flex flex-col items-center justify-center gap-y-[15px]'>
-                <button className={`w-[250px] x-4 py-2 rounded-md ${!isDarkMode && selectedColor !== 'black' ? `bg-white text-${selectedColor}` : isDarkMode && selectedColor === 'black' ? 'bg-black text-white' : ''} ${selectedColor === 'black' && !isDarkMode ? 'text-black' : ''}`} onClick={isRunning ? handleStartStop : timerFinished ? handleRestart : handleStartStop}>
-                  {isRunning ? 'Stop' : timerFinished ? 'Restart' : 'Start'}
-                </button>
-                <button className={`w-[250px] px-4 py-2 rounded-md ${!isDarkMode && selectedColor !== 'black' ? `bg-white text-${selectedColor}` : isDarkMode && selectedColor === 'black' ? 'bg-black text-white' : ''} ${selectedColor === 'black' && !isDarkMode ? 'text-black' : ''}`} onClick={handleFinish}>
-                    Finish
-                  </button>
-                </div>
+          <div className="text-6xl" style={{color: `${selectedColor !== 'black' ? 'white' : isDarkMode ? 'black' : 'white'}`}}>{formatTime(countdown)}</div>
+          <div className="mt-4">
+            <div className='flex flex-col items-center justify-center gap-y-[15px]'>
+              <button 
+                style={{color: `${selectedColor !== 'black' ? selectedColor : isDarkMode ? 'white' : 'black'}`}}
+                className={`w-[250px] py-2 rounded-md 
+                            ${selectedColor === 'black' && isDarkMode ? 'bg-black text-white' : 'bg-white text-' + selectedColor}`}
+                onClick={isRunning ? handleStartStop : timerFinished ? handleRestart : handleStartStop}
+              >
+                {isRunning ? 'Stop' : timerFinished ? 'Restart' : 'Start'}
+              </button>
+              <button 
+                style={{color: `${selectedColor !== 'black' ? selectedColor : isDarkMode ? 'white' : 'black'}`}}
+                className={`w-[250px] px-4 py-2 rounded-md 
+                            ${selectedColor === 'black' && isDarkMode ? 'bg-black text-white' : 'bg-white text-' + selectedColor}`}
+                onClick={handleFinish}
+              >
+                Finish
+              </button>
             </div>
+          </div>
         </div>
-        </main>
-    );
+      </main>
+  );
 }
 
