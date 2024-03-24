@@ -36,7 +36,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
   onSaveButtonClick,
   }) => {
 return (
-  <div className={`absolute flex top-[66%] ${isEditTodoItem ? 'left-[33%]' : ''} justify-center items-center`}>
+  <div className={`absolute flex top-[66.5%] ${isEditTodoItem ? 'left-[33%]' : ''} justify-center items-center`}>
     <div className="absolute inset-x-0 bottom-0 w-[380px] bg-opacity-50 flex justify-start items-center">
     <div className="bg-white p-8 top-50% w-full h-[340px] flex rounded-xl flex-col" style={{border: '1px solid #000000'}}>
       <h2 className="text-lg font-semibold mb-4"  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>컬러</h2>
@@ -180,7 +180,7 @@ const handleStartButtonClick = () => {
   if (selectedTodoTask !== null) {
       const selectedTask = todoItem[selectedTodoTask];
       const { selectedTime, selectedColor } = selectedTask;
-      router.push(`/task?time=${selectedTime}&color=${selectedColor}`);
+      router.push(`/task?time=${selectedTime}&color=${selectedColor}&isDarkMode=${isDarkMode}`);
   }
 };
 
