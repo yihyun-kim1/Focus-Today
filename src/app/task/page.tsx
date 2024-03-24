@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
 import '../globals.css';
+import { LogoAndMode } from '../page';
 
 export default function Task() {
   const pathname = usePathname();
@@ -80,9 +81,14 @@ export default function Task() {
       router.back(); // 이전 페이지로 돌아가기
     };
     
+    const toggleDarkMode = () => {
+      setIsDarkMode(!isDarkMode); // dark mode 상태를 반전시킵니다.
+    };
   
     return (
-        <div className='w-full h-screen flex flex-col items-center justify-center' style={{backgroundColor:selectedColor}}>
+      <main className='flex min-h-screen flex-col' style={{backgroundColor:selectedColor}}>
+      <div className='mx-[200px]'><LogoAndMode isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode}/></div>
+        <div className='w-full h-screen flex flex-col items-center justify-center'>
             <div className="text-6xl text-white">{formatTime(countdown)}</div>
               <div className="mt-4">
                 <div className='flex flex-col items-center justify-center gap-y-[15px]'>
@@ -95,6 +101,7 @@ export default function Task() {
                 </div>
             </div>
         </div>
+        </main>
     );
 }
 
