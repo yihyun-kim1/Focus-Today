@@ -36,7 +36,7 @@ const TaskModal: React.FC<TaskModalProps> = ({
   onSaveButtonClick,
   }) => {
 return (
-  <div className={`absolute flex top-[69%] ${isEditTodoItem ? 'left-[33%]' : ''} justify-center items-center`}>
+  <div className={`absolute flex top-[66%] ${isEditTodoItem ? 'left-[33%]' : ''} justify-center items-center`}>
     <div className="absolute inset-x-0 bottom-0 w-[380px] bg-opacity-50 flex justify-start items-center">
     <div className="bg-white p-8 top-50% w-full h-[340px] flex rounded-xl flex-col" style={{border: '1px solid #000000'}}>
       <h2 className="text-lg font-semibold mb-4"  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>컬러</h2>
@@ -238,8 +238,7 @@ const handleStartButtonClick = () => {
   
 
   const handleDeleteAll = () => {
-    setTodoItem([]);
-    setStoredItems([]);
+    setInputValue('')
     setShowModal(false);
   };
 
@@ -270,7 +269,7 @@ const handleStartButtonClick = () => {
         <h1 className='text-[40px] mt-[30px]' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>
         Hello,<br/>
         let&apos;s focus today.</h1>
-        <div className='flex w-[360px] mt-[50px]'>
+        <div className='flex w-[360px] mt-[50px]' onClick={() => setShowModal(true)}>
           <div className='flex flex-row'>
             <textarea className='flex w-[315px] h-[56px] border-1 rounded-lg px-5 py-4 text-start border-gray-500 text-gray-700'  style={{border: '1px solid #00000026'}}
                       value={inputValue}
