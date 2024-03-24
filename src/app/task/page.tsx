@@ -59,7 +59,9 @@ export default function Task() {
     const formatTime = (seconds:number) => {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
-        return `00:${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+        const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+        const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : `${remainingSeconds}`;
+        return `00:${formattedMinutes}:${formattedSeconds}`;
     };
 
     const handleStartStop = () => {
@@ -93,7 +95,7 @@ export default function Task() {
       <main className='flex min-h-screen flex-col' style={{backgroundColor: `${selectedColor !== 'black' ? selectedColor : isDarkMode ? 'white' : 'black'}`, color: `${selectedColor === 'black' && !isDarkMode ? 'white' : 'black'}`}}>
         <div className='mx-[200px]'><LogoAndMode isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode}/></div>
         <div className='w-full h-screen flex flex-col items-center justify-center'>
-          <div className="text-6xl" style={{color: `${selectedColor !== 'black' ? 'white' : isDarkMode ? 'black' : 'white'}`}}>{formatTime(countdown)}</div>
+        <div className="text-6xl" style={{color: `${selectedColor !== 'black' ? 'rgba(255, 255, 255, ' : isDarkMode ? 'rgba(0, 0, 0, ' : 'rgba(255, 255, 255, '}${timerFinished ? '0.7)' : '1)'}`}}>{formatTime(countdown)}</div>
           <div className="mt-4">
             <div className='flex flex-col items-center justify-center gap-y-[15px]'>
               <button 
