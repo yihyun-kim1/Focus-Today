@@ -23,7 +23,9 @@ interface TaskModalProps {
   setTimeValue: (time: number | null) => void;
   handleTime: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDeleteAll: () => void;
+  handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onSaveButtonClick: () => void;
+  showModal: boolean;
 }
 
 const TaskModal: React.FC<TaskModalProps & { inputValue: string }> = ({
@@ -35,22 +37,47 @@ const TaskModal: React.FC<TaskModalProps & { inputValue: string }> = ({
   setSelectedTime,
   handleTime,
   handleDeleteAll,
+  handleInputChange,
   onSaveButtonClick,
   inputValue,
   setInputValue,
   timeValue,
   setTimeValue,
+  showModal,
   }) => {
 
+  const [editInputValue, setEditInputValue] = useState<string>('');
   const clearTimeValue = () => {
   setSelectedTime(Number(0));// 이미지 클릭 시 입력 필드의 값을 지움
   setTimeValue(0)
 };
+
+const handleEditInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const trimmedValue = event.target.value;
+  setEditInputValue(trimmedValue);
+  setInputValue(trimmedValue)
+  handleInputChange(trimmedValue); 
+};
+
+useEffect(() => {
+  if (!showModal) {
+    setInputValue('');
+    setEditInputValue('');
+    setSelectedTime(0);
+    setSelectedColor('');
+  }
+}, [showModal]);
+
   
 return (
-  <div className={`absolute flex top-[69%] ${isEditTodoItem ? 'left-[33%]' : ''} justify-center items-center`}>
+  <div className={`absolute flex  ${isEditTodoItem ? 'left-[33%] top-[76.5%]' : 'top-[70%]'} justify-center items-center`}>
     <div className="absolute inset-x-0 bottom-0 w-[380px] bg-opacity-50 flex justify-start items-center">
-    <div className="p-8 top-50% w-full h-[340px] flex rounded-xl flex-col" style={{border: `1px solid ${isDarkMode ? '#FFFFFF' : '#000000'}`, backgroundColor: `${!isDarkMode? '#FFFFFF' : '#000000'}`}}>
+    <div className="p-8 top-50% w-full h-full flex rounded-xl flex-col" style={{border: `1px solid ${isDarkMode ? '#FFFFFF' : '#000000'}`, backgroundColor: `${!isDarkMode? '#FFFFFF' : '#000000'}`}}>
+    {isEditTodoItem && <input className='flex w-[315px] h-[56px] border-1 rounded-lg px-5 py-4 text-start border-gray-500 text-gray-700 mb-3'  style={{border: '1px solid #00000026'}}
+            value={editInputValue}
+            onChange={handleEditInputChange}
+            placeholder='Todo를 적어주세요.'>
+      </input>}
       <h2 className="text-lg" style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>컬러</h2>
       <div className="flex flex-row w-[200px] h-[30px] my-2 ">
         <button
@@ -207,6 +234,14 @@ export default function Home() {
     typeof window !== 'undefined' ?localStorage.setItem('isDarkMode', isDarkMode.toString()) : null;
   }, [isDarkMode]);
 
+  useEffect(() => {
+    if (!showModal) {
+      setInputValue('');
+      setSelectedTime(0);
+      setSelectedColor('');
+    }
+  }, [showModal]);
+  
 
 
   const handleTodoTaskClick = (index: number) => {
@@ -227,8 +262,8 @@ const handleStartButtonClick = () => {
   }
 };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const trimmedValue = event.target.value.trim();
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const trimmedValue = event.target.value;
     setInputValue(trimmedValue); 
   };
 
@@ -269,13 +304,15 @@ const handleStartButtonClick = () => {
       }
       console.log(inputValue, selectedTime,selectedColor,'update!')
       setInputValue('');
+      setSelectedColor('')
+      setSelectedTime(0)
       setShowModal(false);
       setIsEditTodoItem(false);
       setSelectedTodoTask(null);
       
     }
     else {
-      alert('포커스 시간을 1분 이상 선택해주세요.');
+      alert('필요한 항목을 모두 입력해주세요.');
     }
   };
 
@@ -309,10 +346,11 @@ const handleStartButtonClick = () => {
         </h1>
         <div className='flex w-[360px] mt-[50px]' onClick={() => setShowModal(true)}>
           <div className='flex flex-row'>
-            <textarea className='flex w-[315px] h-[56px] border-1 rounded-lg px-5 py-4 text-start border-gray-500 text-gray-700'  style={{border: '1px solid #00000026'}}
+            <input className='flex w-[315px] h-[56px] border-1 rounded-lg px-5 py-4 text-start border-gray-500 text-gray-700'  style={{border: '1px solid #00000026'}}
                       value={inputValue}
-                      onChange={handleInputChange}
-                      placeholder='Todo를 적어주세요.'></textarea>
+                      onChange={(event)=>handleInputChange(event)}
+                      placeholder='Todo를 적어주세요.'>
+            </input>
             <button className='w-[56px] h-[56px] ml-[10px] rounded-xl text-[30px]'  style={{color: `${!isDarkMode ? '#FFFFFF' : '#000000'}`, backgroundColor: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} onClick={() => setShowModal(true)}>+</button>
           </div>
         </div>
@@ -354,14 +392,17 @@ const handleStartButtonClick = () => {
               setInputValue={setInputValue}
               handleTime={handleTime}
               handleDeleteAll={handleDeleteAll}
+              handleInputChange={handleInputChange}
               onSaveButtonClick={addTodoItem} 
-              inputValue={inputValue}          />
+              inputValue={inputValue}
+              showModal={showModal}
+          />
         )}
 
       {selectedTodoTask !== null && (
         <div className="flex flex-col max-w-[250px] max-h-[300px] items-center text-center justify-center relative">
           <div className={`flex flex-col max-h-[200px] items-center justify-center mb-4`}>
-          <div className={`w-full h-[100px] text-[60px] mb-4`} style={{ color: `${isDarkMode && selectedColor === 'black' ? '#FFFFFF' : selectedColor}` }}>00:{selectedTime}:00</div>
+          <div className={`w-full h-[100px] text-[60px] mb-4`} style={{ color: `${isDarkMode && selectedColor === 'black' ? '#FFFFFF' : selectedColor}` }}>00:{selectedTime.toString().padStart(2, '0')}:00</div>
           <button
             className={`w-[180px] h-[40px] text-${isDarkMode==true ? 'black' : 'white'} px-4 py-2 rounded-lg`}
             style={{backgroundColor: `${selectedColor == 'black' && isDarkMode == true ? 'white' : selectedColor}`}}
