@@ -93,7 +93,7 @@ export default function Task() {
   
     return (
       <main className='flex flex-col min-h-screen w-full items-center justify-center' style={{backgroundColor: `${selectedColor !== 'black' ? selectedColor : isDarkMode ? 'white' : 'black'}`, color: `${selectedColor === 'black' && !isDarkMode ? 'white' : 'black'}`}}>
-        <div className='flex flex-col w-[1040px]'>
+        <div className='flex flex-col w-[1040px min-h-screen]'>
           <LogoAndMode isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode}/>
         </div>
         <div className='w-full h-screen flex flex-col items-center justify-center'>

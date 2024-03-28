@@ -70,7 +70,7 @@ useEffect(() => {
 
   
 return (
-  <div className={`absolute flex  ${isEditTodoItem ? 'left-[33%] top-[76.5%]' : 'top-[70%]'} justify-center items-center`}>
+  <div className={`absolute flex  ${isEditTodoItem ? 'left-[45%] top-[81%]' : 'top-[74%]'} justify-center items-center`}>
     <div className="absolute inset-x-0 bottom-0 w-[380px] bg-opacity-50 flex justify-start items-center">
     <div className="p-8 top-50% w-full h-full flex rounded-xl flex-col" style={{border: `1px solid ${isDarkMode ? '#FFFFFF' : '#000000'}`, backgroundColor: `${!isDarkMode? '#FFFFFF' : '#000000'}`}}>
     {isEditTodoItem && <input className='flex w-[315px] h-[56px] border-1 rounded-lg px-5 py-4 text-start border-gray-500 text-gray-700 mb-3'  style={{border: '1px solid #00000026'}}
@@ -239,6 +239,7 @@ export default function Home() {
       setInputValue('');
       setSelectedTime(0);
       setSelectedColor('');
+      setIsEditTodoItem(false)
     }
   }, [showModal]);
   
@@ -286,6 +287,8 @@ const handleStartButtonClick = () => {
             ? todoItem[selectedTodoTask].text 
             : '',
       
+        // selectedTime: isEditTodoItem && selectedTodoTask !== null ? selectedTime : localStorage.selectedTime || selectedTime,
+        // selectedColor: isEditTodoItem && selectedTodoTask !== null ? selectedColor : localStorage.selectedColor || selectedColor
         selectedTime: isEditTodoItem && selectedTodoTask !== null ? selectedTime : localStorage.selectedTime || selectedTime,
         selectedColor: isEditTodoItem && selectedTodoTask !== null ? selectedColor : localStorage.selectedColor || selectedColor
       };
@@ -296,7 +299,7 @@ const handleStartButtonClick = () => {
         updatedItems[selectedTodoTask] = newItem;
         setTodoItem(updatedItems);
         setStoredItems(updatedItems);
-        console.log(updatedItems,'update!')
+        setIsEditTodoItem(false);
       } else {
         // 새로운 todo 항목을 추가하는 경우
         setTodoItem([...todoItem, newItem]);
@@ -307,7 +310,6 @@ const handleStartButtonClick = () => {
       setSelectedColor('')
       setSelectedTime(0)
       setShowModal(false);
-      setIsEditTodoItem(false);
       setSelectedTodoTask(null);
       
     }
@@ -327,6 +329,7 @@ const handleStartButtonClick = () => {
     setInputValue('')
     setSelectedColor('')
     setSelectedTime(0)
+    setSelectedTodoTask(null)
     setShowModal(false);
   };
 
@@ -337,7 +340,7 @@ const handleStartButtonClick = () => {
   return (
 
     <main className="flex min-h-screen w-full items-center justify-center" style={{backgroundColor: `${!isDarkMode ? '#FFFFFF' : '#000000'}`}}>
-      <div className='flex flex-col w-[1040px]'>
+      <div className='flex flex-col w-[1040px] min-h-screen'>
         <LogoAndMode isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode}/>
       <div className="overflow-y-auto max-h-[calc(100vh - 40px)]">
         <h1 className='text-[40px] mt-[72px]' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>
@@ -402,7 +405,7 @@ const handleStartButtonClick = () => {
           />
         )}
 
-      {selectedTodoTask !== null && (
+      {selectedTodoTask !== null && !isEditTodoItem && (
         <div className="flex flex-col max-w-[250px] max-h-[300px] items-center text-center justify-center relative">
           <div className={`flex flex-col max-h-[200px] items-center justify-center mb-4`}>
           <div className={`w-[248px] h-[100px] text-[60px] mb-4`} style={{ color: `${isDarkMode && selectedColor === 'black' ? '#FFFFFF' : selectedColor}` }}>00:{selectedTime.toString().padStart(2, '0')}:00</div>
