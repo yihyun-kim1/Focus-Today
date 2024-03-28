@@ -336,22 +336,22 @@ const handleStartButtonClick = () => {
 
   return (
 
-    <main className="flex min-h-screen w-full" style={{backgroundColor: `${!isDarkMode ? '#FFFFFF' : '#000000'}`}}>
-      <div className='flex flex-col w-full mx-[200px]'>
+    <main className="flex min-h-screen w-full items-center justify-center" style={{backgroundColor: `${!isDarkMode ? '#FFFFFF' : '#000000'}`}}>
+      <div className='flex flex-col w-[1040px]'>
         <LogoAndMode isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode}/>
-      <div className="mt-[40px] overflow-y-auto max-h-[calc(100vh - 40px)]">
-        <h1 className='text-[40px] mt-[30px]' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>
+      <div className="overflow-y-auto max-h-[calc(100vh - 40px)]">
+        <h1 className='text-[40px] mt-[72px]' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>
           Hello,<br/>
           let&apos;s focus today.
         </h1>
-        <div className='flex w-[360px] mt-[50px]' onClick={() => setShowModal(true)}>
+        <div className='flex w-[360px] mt-[64px] mb-[24px]' onClick={() => setShowModal(true)}>
           <div className='flex flex-row'>
-            <input className='flex w-[315px] h-[56px] border-1 rounded-lg px-5 py-4 text-start border-gray-500 text-gray-700'  style={{border: '1px solid #00000026'}}
+            <input className='flex w-[296px] h-[56px] border-1 rounded-lg px-5 py-4 text-start border-gray-500 text-gray-700'  style={{border: '1px solid #00000026'}}
                       value={inputValue}
                       onChange={(event)=>handleInputChange(event)}
                       placeholder='Todo를 적어주세요.'>
             </input>
-            <button className='w-[56px] h-[56px] ml-[10px] rounded-xl text-[30px]'  style={{color: `${!isDarkMode ? '#FFFFFF' : '#000000'}`, backgroundColor: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} onClick={() => setShowModal(true)}>+</button>
+            <button className='w-[56px] h-[56px] ml-[8px] rounded-xl text-[30px]'  style={{color: `${!isDarkMode ? '#FFFFFF' : '#000000'}`, backgroundColor: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} onClick={() => setShowModal(true)}>+</button>
           </div>
         </div>
         <div className='overflow-y-auto max-h-[calc(100vh - 100px)]'>
@@ -362,10 +362,10 @@ const handleStartButtonClick = () => {
               border: `1px solid ${selectedTodoTask === index ? `${item.selectedColor}` : '#D8D8D8'}`,
               borderColor: selectedTodoTask === index ? `${item.selectedColor}` : '#D8D8D8'
             }}
-            className={`rounded-xl w-[380px] py-[10px] h-[136px] my-3 cursor-pointer`}
+            className={`rounded-xl w-[380px] px-[16px] py-[16px] mb-2 h-[136px] cursor-pointer`}
             onClick={() => handleTodoTaskClick(index)}
           >
-            <div className='flex flex-row px-3 justify-between'>
+            <div className='flex flex-row justify-between'>
               <div className='flex flex-row items-center'>
                 <div style={{backgroundColor: `${item.selectedColor == 'black' && isDarkMode == true ? 'white' : item.selectedColor}`}} className='mr-[10px] w-[16px] h-[16px] rounded-full'/>
                 <div  style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>{item.selectedTime}min</div>
@@ -373,8 +373,11 @@ const handleStartButtonClick = () => {
                 <div onClick={()=>editTodoItem(index)} style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>Edit</div>
             </div>
             <br/>
-            <div style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} className='my-[10px] mx-[10px] text-[20px] max-w-[380px] overflow-hidden truncate line-clamp-20'>
+            <div style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} className='mt-[12px] text-[20px] max-w-[380px] overflow-hidden truncate line-clamp-20'>
             {item.text}
+            </div>
+            <div className='flex w-full h-[20px] py-[6px] px-[3px] flex-col items-end'>
+              <img src='/Union.png' className='w-[14px] h-[8px]' alt='arrow'/>
             </div>
           </div>
         ))}
@@ -402,13 +405,16 @@ const handleStartButtonClick = () => {
       {selectedTodoTask !== null && (
         <div className="flex flex-col max-w-[250px] max-h-[300px] items-center text-center justify-center relative">
           <div className={`flex flex-col max-h-[200px] items-center justify-center mb-4`}>
-          <div className={`w-full h-[100px] text-[60px] mb-4`} style={{ color: `${isDarkMode && selectedColor === 'black' ? '#FFFFFF' : selectedColor}` }}>00:{selectedTime.toString().padStart(2, '0')}:00</div>
+          <div className={`w-[248px] h-[100px] text-[60px] mb-4`} style={{ color: `${isDarkMode && selectedColor === 'black' ? '#FFFFFF' : selectedColor}` }}>00:{selectedTime.toString().padStart(2, '0')}:00</div>
           <button
-            className={`w-[180px] h-[40px] text-${isDarkMode==true ? 'black' : 'white'} px-4 py-2 rounded-lg`}
-            style={{backgroundColor: `${selectedColor == 'black' && isDarkMode == true ? 'white' : selectedColor}`}}
+            className={`w-full h-[66px] text-${isDarkMode==true ? 'black' : 'white'} px-3 py-2 rounded-lg`}
+            style={{
+              backgroundColor: `${selectedColor == 'black' && isDarkMode == true ? 'white' : selectedColor}`,
+              padding: 0
+            }}
             onClick={handleStartButtonClick}
           >
-            Start
+            <a className='text-lg'>Start</a>
           </button>
           </div>
           <style jsx>{`
