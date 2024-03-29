@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import './globals.css';
 import { LogoAndMode } from '@/components/LogoAndMode';
@@ -19,6 +19,7 @@ interface TaskModalProps {
   setInputValue: (inputValue: string) => void;
   selectedTime: number;
   setSelectedTime: (time: number) => void;
+  // selectedTodoTaskHeight: number | null,
   timeValue: number | null,
   setTimeValue: (time: number | null) => void;
   handleTime: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -45,7 +46,9 @@ const TaskModal: React.FC<TaskModalProps & { inputValue: string }> = ({
   setTimeValue,
   showModal,
   }) => {
-
+  
+  // const taskRef = useRef<HTMLDivElement>(null); 
+  // const [selectedTodoTaskHeight, setSelectedTodoTaskHeight] = useState<number>(0); // 선택된 Task의 높이
   const [editInputValue, setEditInputValue] = useState<string>('');
   const clearTimeValue = () => {
   setSelectedTime(Number(0));// 이미지 클릭 시 입력 필드의 값을 지움
@@ -68,8 +71,17 @@ useEffect(() => {
   }
 }, [showModal]);
 
+// useEffect(() => {
+//   if (taskRef.current) {
+//     const height = taskRef.current.offsetHeight;
+//     setSelectedTodoTaskHeight(height);
+//     console.log(height, 'heights!!');
+//   }
+// }, [isEditTodoItem, taskRef.current]);
+
   
 return (
+  // <div className={`absolute flex ${isEditTodoItem ? `top-[${selectedTodoTaskHeight}px]` : 'top-[74%]'}`} justify-center items-center>
   <div className={`absolute flex  ${isEditTodoItem ? 'left-[45%] top-[81%]' : 'top-[74%]'} justify-center items-center`}>
     <div className="absolute inset-x-0 bottom-0 w-[380px] bg-opacity-50 flex justify-start items-center">
     <div className="p-8 top-50% w-full h-full flex rounded-xl flex-col" style={{border: `1px solid ${isDarkMode ? '#FFFFFF' : '#000000'}`, backgroundColor: `${!isDarkMode? '#FFFFFF' : '#000000'}`}}>
@@ -171,12 +183,14 @@ return (
 
 export default function Home() {
   const router = useRouter(); 
-  const pathname = usePathname();
   const getInitialTodoItems = (): TodoItem[] => {
     const storedItemsJson = typeof window !== 'undefined' ? localStorage.getItem('todoItems') : null;
     return storedItemsJson ? JSON.parse(storedItemsJson) : [];
   };
-  
+
+  // const taskRef = useRef<HTMLDivElement>(null);
+  // const [selectedTodoTaskHeight, setSelectedTodoTaskHeight] = useState<number | null>(null);
+  // const selectedTodoTaskRef = useRef<HTMLDivElement>(null);
   const [todoItem, setTodoItem] = useState<TodoItem[]>(getInitialTodoItems);
   
   const [inputValue, setInputValue] = useState<string>('');
@@ -193,6 +207,19 @@ export default function Home() {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(initialDarkMode);
   const [storedItems, setStoredItems] = useState<TodoItem[]>([]); // 상태로 변경
   const [isEditTodoItem, setIsEditTodoItem] = useState<boolean>(false); 
+
+  // const [taskHeights, setTaskHeights] = useState<number[]>([]);
+
+  // useEffect(() => {
+  //   const heights: number[] = [];
+  //   document.querySelectorAll('.todo-task').forEach(task => {
+  //     if (task instanceof HTMLDivElement) {
+  //       heights.push(task.offsetHeight);
+  //     }
+  //   });
+  //   setTaskHeights(heights);
+  // }, [todoItem]);
+  
 
   useEffect(() => {
     const storedColor = typeof window !== 'undefined' ? localStorage.getItem('selectedColor') : null;
@@ -342,8 +369,9 @@ const handleStartButtonClick = () => {
     <main className="flex min-h-screen w-full items-center justify-center" style={{backgroundColor: `${!isDarkMode ? '#FFFFFF' : '#000000'}`}}>
       <div className='flex flex-col w-[1040px] min-h-screen'>
         <LogoAndMode isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode}/>
-      <div className="overflow-y-auto max-h-[calc(100vh - 40px)]">
-        <h1 className='text-[40px] mt-[72px]' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>
+      <div className="overflow-y-auto max-h-[calc(100vh - 40px)] mt-[56px] flex flex-row">
+        <div className='w-[360px]'>
+        <h1 className='text-[40px]' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>
           Hello,<br/>
           let&apos;s focus today.
         </h1>
@@ -365,7 +393,7 @@ const handleStartButtonClick = () => {
               border: `1px solid ${selectedTodoTask === index ? `${item.selectedColor}` : '#D8D8D8'}`,
               borderColor: selectedTodoTask === index ? `${item.selectedColor}` : '#D8D8D8'
             }}
-            className={`rounded-xl w-[380px] px-[16px] py-[16px] mb-2 h-[136px] cursor-pointer`}
+            className={`rounded-xl w-full px-[16px] py-[16px] mb-2 h-[136px] cursor-pointer todo-task`}
             onClick={() => handleTodoTaskClick(index)}
           >
             <div className='flex flex-row justify-between'>
@@ -393,6 +421,7 @@ const handleStartButtonClick = () => {
               setSelectedColor={setSelectedColor}
               selectedTime={selectedTime}
               setSelectedTime={setSelectedTime}
+              // selectedTodoTaskHeight={selectedTodoTask !== null ? taskHeights[selectedTodoTask] : 0}
               timeValue={timeValue}
               setTimeValue={setTimeValue}
               setInputValue={setInputValue}
@@ -404,11 +433,12 @@ const handleStartButtonClick = () => {
               showModal={showModal}
           />
         )}
-
+      </div>
+      <div className='w-[640px] flex align-center justify-center'>
       {selectedTodoTask !== null && !isEditTodoItem && (
         <div className="flex flex-col max-w-[250px] max-h-[300px] items-center text-center justify-center relative">
-          <div className={`flex flex-col max-h-[200px] items-center justify-center mb-4`}>
-          <div className={`w-[248px] h-[100px] text-[60px] mb-4`} style={{ color: `${isDarkMode && selectedColor === 'black' ? '#FFFFFF' : selectedColor}` }}>00:{selectedTime.toString().padStart(2, '0')}:00</div>
+          <div className={`flex flex-col max-h-[200px] gap-y-[16px]`}>
+          <div className={`w-[248px] h-[78px] text-[60px]`} style={{ color: `${isDarkMode && selectedColor === 'black' ? '#FFFFFF' : selectedColor}` }}>00:{selectedTime.toString().padStart(2, '0')}:00</div>
           <button
             className={`w-full h-[66px] text-${isDarkMode==true ? 'black' : 'white'} px-3 py-2 rounded-lg`}
             style={{
@@ -423,12 +453,13 @@ const handleStartButtonClick = () => {
           <style jsx>{`
           .relative {
             position: absolute;
-            left: 60%;
-            bottom: 350px; 
+            // left: 60%;
+            bottom: 380px; 
           }
         `}</style>
         </div>
       )}
+      </div>
       </div>
       </div>
     </main>
