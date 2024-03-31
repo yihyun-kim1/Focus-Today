@@ -92,11 +92,11 @@ export default function Task() {
     }, [isDarkMode]);
   
     return (
-      <main className='flex flex-col min-h-screen w-full items-center justify-center' style={{backgroundColor: `${selectedColor !== 'black' ? selectedColor : isDarkMode ? 'white' : 'black'}`, color: `${selectedColor === 'black' && !isDarkMode ? 'white' : 'black'}`}}>
-        <div className='flex flex-col w-[1040px min-h-screen]'>
+      <main className='flex flex-col w-full h-screen items-center justify-center' style={{backgroundColor: `${selectedColor !== 'black' ? selectedColor : isDarkMode ? 'white' : 'black'}`, color: `${selectedColor === 'black' && !isDarkMode ? 'white' : 'black'}`}}>
+        <div className='flex flex-col w-[1040px] h-full'>
           <LogoAndMode isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode}/>
         </div>
-        <div className='w-full h-screen flex flex-col items-center justify-center'>
+        <div className='w-[640px] h-[732px] mb-[241px] flex flex-col items-center justify-center'>
         <div className="text-[56px] h-[78px]" style={{color: `${selectedColor !== 'black' ? 'rgba(255, 255, 255, ' : isDarkMode ? 'rgba(0, 0, 0, ' : 'rgba(255, 255, 255, '}${timerFinished ? '0.7)' : '1)'}`}}>{formatTime(countdown)}</div>
           <div className="mt-4">
             <div className='flex flex-col items-center justify-center gap-y-[8px]'>

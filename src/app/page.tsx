@@ -85,50 +85,50 @@ return (
   <div className={`absolute flex  ${isEditTodoItem ? 'left-[45%] top-[81%]' : 'top-[74%]'} justify-center items-center`}>
     <div className="absolute inset-x-0 bottom-0 w-[380px] bg-opacity-50 flex justify-start items-center">
     <div className="p-8 top-50% w-full h-full flex rounded-xl flex-col" style={{border: `1px solid ${isDarkMode ? '#FFFFFF' : '#000000'}`, backgroundColor: `${!isDarkMode? '#FFFFFF' : '#000000'}`}}>
-    {isEditTodoItem && <input className='flex w-[315px] h-[56px] border-1 rounded-lg px-5 py-4 text-start border-gray-500 text-gray-700 mb-3'  style={{border: '1px solid #00000026'}}
+    {isEditTodoItem && <input className='flex w-[315px] mb-[24px] h-[102px] border-1 rounded-lg px-5 py-4 text-start border-gray-500 text-gray-700'  style={{border: '1px solid #00000026'}}
             value={editInputValue}
             onChange={handleEditInputChange}
             placeholder='Todo를 적어주세요.'>
       </input>}
-      <h2 className="text-lg" style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>컬러</h2>
-      <div className="flex flex-row w-[200px] h-[30px] my-2 ">
+      <h2 className="text-lg w-[320px] h-[26px] mb-[16px]" style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>컬러</h2>
+      <div className="flex flex-row w-[200px] h-[32px] gap-x-[12px] ">
         <button
-          className={`flex w-[30px] h-[30px] rounded-md bg-black text-white mr-2 ${selectedColor === 'black' ? 'border-2 border-gray-800' : ''}`}
+          className={`flex w-[32px] h-[32px] rounded-md bg-black text-white ${selectedColor === 'black' ? 'border-2 border-gray-800' : ''}`}
           onClick={() => setSelectedColor('black')}
         >
         </button>
         <button
-          className={`flex w-[30px] h-[30px] rounded-md text-white mr-2 ${selectedColor === 'pink' ? 'border-2 border-gray-800' : ''}`}
+          className={`flex w-[32px] h-[32px] rounded-md text-white ${selectedColor === 'pink' ? 'border-2 border-gray-800' : ''}`}
           style={{backgroundColor: '#EE81C8'}}
           onClick={() => setSelectedColor('#EE81C8')}
         >
         </button>
         <button
-          className={`flex w-[30px] h-[30px] rounded-md text-white mr-2 ${selectedColor === 'orange' ? 'border-2 border-gray-800' : ''}`}
+          className={`flex w-[32px] h-[32px] rounded-md text-white ${selectedColor === 'orange' ? 'border-2 border-gray-800' : ''}`}
           style={{backgroundColor: '#FF734B'}}
           onClick={() => setSelectedColor('#FF734B')}
         >
         </button>
         <button
-          className={`flex w-[30px] h-[30px] rounded-md text-white mr-2 ${selectedColor === 'yellow' ? 'border-2 border-gray-800' : ''}`}
+          className={`flex w-[32px] h-[32px] rounded-md text-white ${selectedColor === 'yellow' ? 'border-2 border-gray-800' : ''}`}
           style={{backgroundColor: '#FFD44F'}}
           onClick={() => setSelectedColor('#FFD44F')}
         >
         </button>
         <button
-          className={`flex w-[30px] h-[30px] rounded-md text-white ${selectedColor === 'green' ? 'border-2 border-gray-800' : ''}`}
+          className={`flex w-[32px] h-[32px] rounded-md text-white ${selectedColor === 'green' ? 'border-2 border-gray-800' : ''}`}
           style={{backgroundColor: '#35C792'}}
           onClick={() => setSelectedColor('#35C792')}
         >
         </button>
       </div>
       <div className="flex flex-col">
-        <h2 className="mt-[10px] text-lg" style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>포커스 시간</h2>
+        <h2 className="mt-[24px] text-lg" style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>포커스 시간</h2>
         <div className='flex flex-row'>
         {[10, 15, 20, 25, 30, 45, 55].map((time) => (
           <button
             key={time}
-            className={`flex mt-[10px] w-[35px] h-[44px] text-center items-center justify-center border rounded-md mr-2 mb-2 text-[17px] ${selectedTime === time ? 'bg-black text-white' : 'text-black bg-gray-300'}`}
+            className={`flex mt-[24px] w-[35px] h-[44px] text-center items-center justify-center border rounded-md mr-2 mb-2 text-[17px] ${selectedTime === time ? 'bg-black text-white' : 'text-black bg-gray-300'}`}
             onClick={() => {
               setSelectedTime(time);
               setTimeValue(time); 
@@ -138,7 +138,7 @@ return (
           </button>
         ))} 
         </div>
-        <div className="relative mt-2">
+        <div className="relative mt-[12px]">
           <input
             type="number"
             value={timeValue !== null ? timeValue.toString() : ''}
@@ -157,15 +157,15 @@ return (
 
 
       </div>
-      <div className="flex flex-row mt-[12px]">
+      <div className="flex flex-row mt-[28px]">
         <button
-          className="flex-1 h-[40px] rounded-md bg-gray-300 text-black mr-2"
+          className="flex-1 w-[156px] h-[44px] rounded-md bg-gray-300 text-black mr-2"
           onClick={handleDeleteAll}
         >
           Delete
         </button>
         <button
-          className={`flex-1 h-[40px] rounded-md ${
+          className={`flex-1 w-[156px] h-[44px] rounded-md ${
             (((timeValue !== null && timeValue > 0) || (selectedTime > 0)) && selectedColor && inputValue.length > 0)
               ? 'bg-black text-white' 
               : 'bg-gray-300 text-black'
