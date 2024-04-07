@@ -13,7 +13,7 @@ export const LogoAndMode: React.FC<LogoAndModeProps> = ({ isDarkMode, toggleDark
         <div style={{backgroundColor: `${isDarkMode ? '#FFFFFF' : '#000000'}`}} className='mr-[10px] w-[16px] h-[16px] rounded-full'/>
         <div style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>focus today</div>
       </div>
-      <div className='flex flex-row' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>Dark mode:          
+      {/* <div className='flex flex-row' style={{color: `${isDarkMode ? '#FFFFFF' : '#000000'}`}}>Dark mode:          
       <button
         className={`ml-2 w-[40px] h-[22px] rounded-full bg-gray-300 relative focus:outline-none overflow-hidden transition-all duration-300 ${isDarkMode ? 'bg-white' : 'bg-gray-300'}`}
         style={{border: '1px solid black'}}
@@ -24,7 +24,7 @@ export const LogoAndMode: React.FC<LogoAndModeProps> = ({ isDarkMode, toggleDark
         </div>
       </button>
   
-      </div>
+      </div> */}
     </div>
     )
   }
