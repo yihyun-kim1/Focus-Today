@@ -16,6 +16,7 @@ interface TaskModalProps {
   selectedColor: string;
   setSelectedColor: (color: string) => void;
   setInputValue: (inputValue: string) => void;
+  setEditInputValue: (editInputValue: string) => void;
   selectedTime: number;
   setSelectedTime: (time: number) => void;
   timeValue: number | null;
@@ -27,7 +28,9 @@ interface TaskModalProps {
   showModal: boolean;
 }
 
-const TaskModal: React.FC<TaskModalProps & { inputValue: string }> = ({
+const TaskModal: React.FC<
+  TaskModalProps & { inputValue: string; editInputValue: string }
+> = ({
   isEditTodoItem,
   isDarkMode,
   selectedColor,
@@ -36,15 +39,15 @@ const TaskModal: React.FC<TaskModalProps & { inputValue: string }> = ({
   setSelectedTime,
   handleTime,
   handleDeleteAll,
-  handleInputChange,
+  setEditInputValue,
   onSaveButtonClick,
   inputValue,
+  editInputValue,
   setInputValue,
   timeValue,
   setTimeValue,
   showModal,
 }) => {
-  const [editInputValue, setEditInputValue] = useState<string>("");
   const clearTimeValue = () => {
     setSelectedTime(Number(0)); // 이미지 클릭 시 입력 필드의 값을 지움
     setTimeValue(0);
@@ -55,8 +58,6 @@ const TaskModal: React.FC<TaskModalProps & { inputValue: string }> = ({
   ) => {
     const trimmedValue = event.target.value;
     setEditInputValue(trimmedValue);
-    setInputValue(trimmedValue);
-    // handleInputChange(trimmedValue);
   };
 
   useEffect(() => {
@@ -73,7 +74,7 @@ const TaskModal: React.FC<TaskModalProps & { inputValue: string }> = ({
       className={`${
         isEditTodoItem
           ? "fixed right-0 left-0 bottom-0 bg-black bg-opacity-50 z-50 top-[60px]"
-          : "absolute top-[78%]"
+          : "absolute top-[37%]"
       } flex justify-center items-center`}
     >
       <div className=" inset-x-0 bottom-50 w-[360px] bg-opacity-50 flex justify-start items-center">
@@ -212,6 +213,7 @@ export default function Home() {
   };
   const [todoItem, setTodoItem] = useState<TodoItem[]>(getInitialTodoItems);
   const [inputValue, setInputValue] = useState<string>("");
+  const [editInputValue, setEditInputValue] = useState<string>("");
   const [timeValue, setTimeValue] = useState<number | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedColor, setSelectedColor] = useState<string>(
@@ -346,8 +348,8 @@ export default function Home() {
               selectedTodoTask !== null &&
               selectedTime > 0 &&
               selectedColor &&
-              inputValue.trim() !== ""
-            ? inputValue
+              editInputValue.trim() !== ""
+            ? editInputValue
             : isEditTodoItem && selectedTodoTask !== null
             ? todoItem[selectedTodoTask].text
             : "",
@@ -376,6 +378,7 @@ export default function Home() {
       }
       console.log(inputValue, selectedTime, selectedColor, "update!");
       setInputValue("");
+      setEditInputValue("");
       setSelectedColor("");
       setSelectedTime(0);
       setShowModal(false);
@@ -518,11 +521,13 @@ export default function Home() {
                 timeValue={timeValue}
                 setTimeValue={setTimeValue}
                 setInputValue={setInputValue}
+                setEditInputValue={setEditInputValue}
                 handleTime={handleTime}
                 handleDeleteAll={handleDeleteAll}
                 handleInputChange={handleInputChange}
                 onSaveButtonClick={addTodoItem}
                 inputValue={inputValue}
+                editInputValue={editInputValue}
                 showModal={showModal}
               />
             )}
