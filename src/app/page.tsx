@@ -73,7 +73,7 @@ const TaskModal: React.FC<TaskModalProps & { inputValue: string }> = ({
     <div
       className={`${
         isEditTodoItem
-          ? "fixed inset-0 bg-black bg-opacity-50 z-50"
+          ? "fixed right-0 left-0 bottom-0 bg-black bg-opacity-50 z-50 top-[60px]"
           : "absolute top-[78%]"
       } flex justify-center items-center`}
     >
