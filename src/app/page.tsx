@@ -18,7 +18,6 @@ interface TaskModalProps {
   setInputValue: (inputValue: string) => void;
   selectedTime: number;
   setSelectedTime: (time: number) => void;
-  // selectedTodoTaskHeight: number | null,
   timeValue: number | null;
   setTimeValue: (time: number | null) => void;
   handleTime: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -81,8 +80,8 @@ const TaskModal: React.FC<TaskModalProps & { inputValue: string }> = ({
         <div
           className="p-8 w-full h-full flex rounded-xl flex-col"
           style={{
-            border: `1px solid ${isDarkMode ? "#FFFFFF" : "#000000"}`,
-            backgroundColor: `${!isDarkMode ? "#FFFFFF" : "#000000"}`,
+            border: "1px solid rgba(34, 34, 34, 0.40);",
+            backgroundColor: "#FFFFFF",
           }}
         >
           {isEditTodoItem && (
@@ -96,7 +95,7 @@ const TaskModal: React.FC<TaskModalProps & { inputValue: string }> = ({
           )}
           <h2
             className="text-lg w-[320px] h-[26px] mb-[16px]"
-            style={{ color: `${isDarkMode ? "#FFFFFF" : "#000000"}` }}
+            style={{ color: "#000000" }}
           >
             컬러
           </h2>
@@ -137,10 +136,7 @@ const TaskModal: React.FC<TaskModalProps & { inputValue: string }> = ({
             ></button>
           </div>
           <div className="flex flex-col">
-            <h2
-              className="mt-[24px] text-lg"
-              style={{ color: `${isDarkMode ? "#FFFFFF" : "#000000"}` }}
-            >
+            <h2 className="mt-[24px] text-lg" style={{ color: "#000000" }}>
               포커스 시간
             </h2>
             <div className="flex flex-row">
