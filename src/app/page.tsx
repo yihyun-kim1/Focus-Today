@@ -79,9 +79,9 @@ const TaskModal: React.FC<
     >
       <div className=" inset-x-0 bottom-50 w-[360px] bg-opacity-50 flex justify-start items-center">
         <div
-          className="p-8 w-full h-full flex rounded-xl flex-col"
+          className="px-[20px] py-[24px] w-full h-full flex rounded-xl flex-col"
           style={{
-            border: "1px solid rgba(34, 34, 34, 0.40);",
+            border: "1px solid #27272766",
             backgroundColor: "#FFFFFF",
           }}
         >
@@ -95,7 +95,7 @@ const TaskModal: React.FC<
             ></input>
           )}
           <h2
-            className="text-lg w-[320px] h-[26px] mb-[16px]"
+            className="text-lg w-[320px] h-[26px] mb-[8px]"
             style={{ color: "#000000" }}
           >
             컬러
@@ -129,11 +129,11 @@ const TaskModal: React.FC<
             <h2 className="mt-[24px] text-lg" style={{ color: "#000000" }}>
               포커스 시간
             </h2>
-            <div className="flex flex-row">
+            <div className="flex flex-row w-[320px] gap-x-[12px] ">
               {[10, 15, 20, 25, 30, 45, 55].map((time) => (
                 <button
                   key={time}
-                  className={`flex mt-[24px] w-[35px] h-[44px] text-center items-center justify-center border rounded-md mr-2 mb-2 text-[17px] ${
+                  className={`flex mt-[8px] w-[35px] h-[44px] text-center items-center justify-center border rounded-md mb-2 text-[17px] ${
                     selectedTime === time
                       ? "bg-black text-white"
                       : "text-black bg-gray-300"
@@ -147,7 +147,7 @@ const TaskModal: React.FC<
                 </button>
               ))}
             </div>
-            <div className="relative mt-[12px]">
+            <div className="relative mt-[12px] w-[320px]">
               <input
                 type="number"
                 value={timeValue !== null ? timeValue.toString() : ""}
@@ -167,9 +167,10 @@ const TaskModal: React.FC<
               />
             </div>
           </div>
-          <div className="flex flex-row mt-[28px]">
+          <div className="flex flex-row mt-[28px] w-[320px] gap-x-[8px]">
             <button
-              className="flex-1 w-[156px] h-[44px] rounded-md bg-gray-300 text-black mr-2"
+              className="flex-1 w-[156px] h-[44px] rounded-md bg-white text-black mr-2"
+              style={{ border: "1px solid black" }}
               onClick={handleDeleteAll}
             >
               Delete
@@ -180,7 +181,7 @@ const TaskModal: React.FC<
                 selectedColor &&
                 inputValue.length > 0
                   ? "bg-black text-white"
-                  : "bg-gray-300 text-black"
+                  : "bg-gray-300 text-white"
               }`}
               onClick={onSaveButtonClick}
             >
@@ -397,12 +398,12 @@ export default function Home() {
 
   return (
     <main
-      className="flex min-h-screen w-full items-center justify-center"
+      className="flex fixed w-full items-center justify-center"
       style={{ backgroundColor: `${!isDarkMode ? "#FFFFFF" : "#000000"}` }}
     >
       <div className="flex flex-col w-[1040px] min-h-screen">
         <LogoAndMode isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
-        <div className="overflow-y-auto w-[1040px] max-h-[867px] mb-[105px] mt-[56px] flex flex-row">
+        <div className="w-[1040px] max-h-[867px] mb-[105px] mt-[56px] flex flex-row">
           <div className="w-[360px] ">
             <h1
               className="text-[40px]"
@@ -418,8 +419,8 @@ export default function Home() {
             >
               <div className="flex flex-row">
                 <input
-                  className="flex w-[296px] h-[56px] border-1 rounded-lg px-5 py-4 text-start border-gray-500 text-gray-700"
-                  style={{ border: "1px solid #00000026" }}
+                  className="flex w-[296px] h-[56px] border-1 rounded-lg px-5 py-4 text-start"
+                  style={{ border: "1px solid #27272766", color: "#22222280" }}
                   value={inputValue}
                   onChange={(event) => handleInputChange(event)}
                   placeholder="Todo를 적어주세요."
@@ -444,12 +445,12 @@ export default function Home() {
                     border: `1px solid ${
                       selectedTodoTask === index
                         ? `${item.selectedColor}`
-                        : "#D8D8D8"
+                        : "#27272766"
                     }`, // 선택된 경우 2px로 조건 주기
                     borderColor:
                       selectedTodoTask === index
                         ? `${item.selectedColor}`
-                        : "#D8D8D8",
+                        : "#27272766",
                   }}
                   className={`rounded-xl w-full px-[16px] py-[16px] mb-2 h-[136px] cursor-pointer todo-task`}
                   onClick={() => handleTodoTaskClick(index)}
