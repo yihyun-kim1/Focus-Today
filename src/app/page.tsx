@@ -74,7 +74,7 @@ const TaskModal: React.FC<
       className={`${
         isEditTodoItem
           ? "fixed right-0 left-0 bottom-0 bg-black bg-opacity-50 z-50 top-[60px]"
-          : "absolute top-[37%]"
+          : "absolute top-[380px]"
       } flex justify-center items-center`}
     >
       <div className=" inset-x-0 bottom-50 w-[360px] bg-opacity-50 flex justify-start items-center">
@@ -100,41 +100,30 @@ const TaskModal: React.FC<
           >
             컬러
           </h2>
-          <div className="flex flex-row w-[200px] h-[32px] gap-x-[12px] ">
-            <button
-              className={`flex w-[32px] h-[32px] rounded-md bg-black text-white ${
-                selectedColor === "black" ? "border-2 border-gray-800" : ""
-              }`}
-              onClick={() => setSelectedColor("black")}
-            ></button>
-            <button
-              className={`flex w-[32px] h-[32px] rounded-md text-white ${
-                selectedColor === "pink" ? "border-2 border-gray-800" : ""
-              }`}
-              style={{ backgroundColor: "#EE81C8" }}
-              onClick={() => setSelectedColor("#EE81C8")}
-            ></button>
-            <button
-              className={`flex w-[32px] h-[32px] rounded-md text-white ${
-                selectedColor === "orange" ? "border-2 border-gray-800" : ""
-              }`}
-              style={{ backgroundColor: "#FF734B" }}
-              onClick={() => setSelectedColor("#FF734B")}
-            ></button>
-            <button
-              className={`flex w-[32px] h-[32px] rounded-md text-white ${
-                selectedColor === "yellow" ? "border-2 border-gray-800" : ""
-              }`}
-              style={{ backgroundColor: "#FFD44F" }}
-              onClick={() => setSelectedColor("#FFD44F")}
-            ></button>
-            <button
-              className={`flex w-[32px] h-[32px] rounded-md text-white ${
-                selectedColor === "green" ? "border-2 border-gray-800" : ""
-              }`}
-              style={{ backgroundColor: "#35C792" }}
-              onClick={() => setSelectedColor("#35C792")}
-            ></button>
+          <div className="flex flex-row w-[200px] h-[32px] gap-x-[12px] relative">
+            {[
+              { color: "black", hex: "black" },
+              { color: "pink", hex: "#EE81C8" },
+              { color: "orange", hex: "#FF734B" },
+              { color: "yellow", hex: "#FFD44F" },
+              { color: "green", hex: "#35C792" },
+            ].map((btnColor) => (
+              <div key={btnColor.color} className="relative w-[32px] h-[32px]">
+                <button
+                  className={"flex w-full h-full rounded-md text-white"}
+                  style={{ backgroundColor: btnColor.hex }}
+                  onClick={() => setSelectedColor(btnColor.hex)}
+                ></button>
+                {selectedColor === btnColor.hex && (
+                  <img
+                    src="/check.svg"
+                    alt="check"
+                    className="absolute inset-0 m-auto"
+                    style={{ width: "16px", height: "16px" }}
+                  />
+                )}
+              </div>
+            ))}
           </div>
           <div className="flex flex-col">
             <h2 className="mt-[24px] text-lg" style={{ color: "#000000" }}>
