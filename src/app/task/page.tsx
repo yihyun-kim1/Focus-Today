@@ -23,7 +23,7 @@ export default function Task() {
       : 10 * 60
   );
   const [timerId, setTimerId] = useState<number | null>(null); // 타이머 ID
-  const [isRunning, setIsRunning] = useState(false);
+  const [isRunning, setIsRunning] = useState(true);
   const [timerFinished, setTimerFinished] = useState(false);
 
   useEffect(() => {
@@ -164,7 +164,7 @@ export default function Task() {
                   : handleStartStop
               }
             >
-              {isRunning ? "Stop" : timerFinished ? "Restart" : "Start"}
+              {isRunning ? "Pause" : timerFinished ? "Restart" : "Start"}
             </button>
             <button
               style={{
@@ -176,7 +176,7 @@ export default function Task() {
                     : "black"
                 }`,
               }}
-              className={`w-[248px] h-[66px] py-4 px-6 rounded-lg text-lg
+              className={`w-[248px] h-[66px] py-4 px-6 opacity-[80%] rounded-lg text-lg
                             ${
                               selectedColor === "black" && isDarkMode
                                 ? "bg-black text-white"
