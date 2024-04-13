@@ -26,6 +26,7 @@ interface TaskModalProps {
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onSaveButtonClick: () => void;
   showModal: boolean;
+  initialValues: { color: string; time: number; text: string };
 }
 
 const TaskModal: React.FC<
@@ -47,9 +48,14 @@ const TaskModal: React.FC<
   timeValue,
   setTimeValue,
   showModal,
+  initialValues,
 }) => {
+  const clearInputValue = () => {
+    setEditInputValue("");
+  };
+
   const clearTimeValue = () => {
-    setSelectedTime(Number(0)); // 이미지 클릭 시 입력 필드의 값을 지움
+    setSelectedTime(Number(0));
     setTimeValue(0);
   };
 
@@ -69,6 +75,7 @@ const TaskModal: React.FC<
     }
   }, [showModal]);
 
+  console.log(initialValues, "initial?");
   return (
     <div
       className={`${
@@ -86,13 +93,22 @@ const TaskModal: React.FC<
           }}
         >
           {isEditTodoItem && (
-            <input
-              className="flex w-full mb-[24px] h-[102px] border-1 rounded-lg px-5 py-4 text-start border-gray-500 text-gray-700"
-              style={{ border: "1px solid #00000026" }}
-              value={editInputValue}
-              onChange={handleEditInputChange}
-              placeholder="Todo를 적어주세요."
-            ></input>
+            <div className="relative w-full mb-[24px]">
+              <input
+                className="flex w-full h-[56px] border-1 rounded-lg px-5 py-4 text-start border-gray-500 text-gray-700 pr-10"
+                style={{ border: "1px solid #00000026" }}
+                value={editInputValue}
+                onChange={handleEditInputChange}
+                placeholder="Todo명은 최대 2줄까지 입력할 수 있습니다."
+              />
+              <img
+                src="/close.svg"
+                alt="Close"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                onClick={clearInputValue}
+                style={{ width: "20px", height: "20px" }}
+              />
+            </div>
           )}
           <h2
             className="text-lg w-[320px] h-[26px] mb-[8px]"
@@ -129,12 +145,12 @@ const TaskModal: React.FC<
             <h2 className="mt-[24px] text-lg" style={{ color: "#000000" }}>
               포커스 시간
             </h2>
-            <div className="flex flex-row w-[320px] gap-x-[12px] ">
+            <div className="flex flex-row w-full mt-[8px] gap-x-[12px] ">
               {[10, 15, 20, 25, 30, 45, 55].map((time) => (
                 <button
                   key={time}
-                  className={`flex mt-[8px] w-[35px] h-[44px] text-center items-center justify-center border rounded-md mb-2 text-[17px] ${
-                    selectedTime === time
+                  className={`flex w-[35.5px] h-[44px] text-center items-center justify-center border rounded-md mb-2 text-[17px] ${
+                    selectedTime == time
                       ? "bg-black text-white"
                       : "text-black bg-gray-300"
                   }`}
@@ -177,13 +193,26 @@ const TaskModal: React.FC<
             </button>
             <button
               className={`flex-1 w-[156px] h-[44px] rounded-md ${
-                ((timeValue !== null && timeValue > 0) || selectedTime > 0) &&
-                selectedColor &&
-                inputValue.length > 0
+                isEditTodoItem
+                  ? initialValues.color !== selectedColor ||
+                    initialValues.time !== selectedTime ||
+                    initialValues.text.trim() !== editInputValue.trim()
+                    ? "bg-black text-white"
+                    : "bg-gray-300 text-white"
+                  : ((timeValue !== null && timeValue > 0) ||
+                      selectedTime > 0) &&
+                    selectedColor &&
+                    inputValue.length > 0
                   ? "bg-black text-white"
                   : "bg-gray-300 text-white"
               }`}
               onClick={onSaveButtonClick}
+              disabled={
+                isEditTodoItem &&
+                initialValues.color === selectedColor &&
+                initialValues.time === selectedTime &&
+                initialValues.text.trim() === editInputValue.trim()
+              }
             >
               Save
             </button>
@@ -201,6 +230,7 @@ export default function Home() {
       typeof window !== "undefined" ? localStorage.getItem("todoItems") : null;
     return storedItemsJson ? JSON.parse(storedItemsJson) : [];
   };
+
   const [todoItem, setTodoItem] = useState<TodoItem[]>(getInitialTodoItems);
   const [inputValue, setInputValue] = useState<string>("");
   const [editInputValue, setEditInputValue] = useState<string>("");
@@ -218,6 +248,11 @@ export default function Home() {
     : 10;
   const [selectedTime, setSelectedTime] = useState<number>(initialSelectedTime);
   const [selectedTodoTask, setSelectedTodoTask] = useState<number | null>(null);
+  const [initialValues, setInitialValues] = useState({
+    color: selectedColor,
+    time: selectedTime,
+    text: inputValue,
+  });
   const initialDarkMode =
     typeof window !== "undefined"
       ? localStorage.getItem("isDarkMode") === "true"
@@ -282,28 +317,52 @@ export default function Home() {
   }, [isDarkMode]);
 
   useEffect(() => {
-    if (!showModal) {
+    if (showModal && isEditTodoItem && selectedTodoTask !== null) {
+      const task = todoItem[selectedTodoTask];
+      setInitialValues({
+        color: task.selectedColor,
+        time: task.selectedTime,
+        text: task.text,
+      });
+      // Ensure the input fields are also updated to reflect the selected task's data
+      setInputValue(task.text);
+      setEditInputValue(task.text);
+      setSelectedColor(task.selectedColor);
+      setSelectedTime(task.selectedTime);
+      setTimeValue(task.selectedTime);
+    } else if (!showModal) {
+      // Reset initial values when the modal is closed
+      setInitialValues({ color: "", time: 0, text: "" });
       setInputValue("");
-      setSelectedTime(0);
-      setSelectedColor("");
-      setIsEditTodoItem(false);
+      setEditInputValue("");
+      // setSelectedColor("black"); // or your default value
+      // setSelectedTime(0);
+      // setTimeValue(null);
     }
-  }, [showModal]);
+  }, [showModal, isEditTodoItem, selectedTodoTask, todoItem]);
 
   const handleTodoTaskClick = (index: number) => {
     setSelectedTodoTask(index);
     const selectedTask = todoItem[index];
     setSelectedColor(selectedTask.selectedColor);
     setSelectedTime(selectedTask.selectedTime);
-    console.log(selectedColor, selectedTask, selectedTime);
-    localStorage.setItem("selectedTime", selectedTime.toString());
-    localStorage.setItem("selectedColor", selectedColor);
+    console.log(selectedTask, "??????????");
+    localStorage.setItem("text", selectedTask.text);
+    localStorage.setItem("selectedTime", selectedTask.selectedTime.toString());
+    localStorage.setItem("selectedColor", selectedTask.selectedColor);
   };
+
+  const hours = Math.floor(selectedTime / 60);
+  const minutes = selectedTime % 60;
+  const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
+    .toString()
+    .padStart(2, "0")}:00`;
 
   const handleStartButtonClick = () => {
     if (selectedTodoTask !== null) {
       const selectedTask = todoItem[selectedTodoTask];
-      const { selectedTime, selectedColor } = selectedTask;
+      const { selectedColor } = selectedTask;
+
       router.push(
         `/task?time=${selectedTime}&color=${selectedColor}&isDarkMode=${isDarkMode}`
       );
@@ -519,6 +578,7 @@ export default function Home() {
                 inputValue={inputValue}
                 editInputValue={editInputValue}
                 showModal={showModal}
+                initialValues={initialValues}
               />
             )}
           </div>
@@ -536,7 +596,7 @@ export default function Home() {
                       }`,
                     }}
                   >
-                    00:{selectedTime.toString().padStart(2, "0")}:00
+                    {formattedTime}
                   </div>
                   <button
                     className={`w-full h-[66px] text-${

@@ -30,7 +30,15 @@ export default function Task() {
     // URL 쿼리 매개변수 파싱
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const isDarkModeParam = urlParams.get("isDarkMode");
+    const timeParam = urlParams.get("time");
+    const parsedTime = parseInt(timeParam || "0") * 60; // 분을 초로 변환
+
+    setCountdown(parsedTime);
+    setIsRunning(true);
+
+    return () => {
+      if (timerId) clearInterval(timerId);
+    };
   }, []);
 
   useEffect(() => {
@@ -65,12 +73,12 @@ export default function Task() {
   }, [isRunning]);
 
   const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-    const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-    const formattedSeconds =
-      remainingSeconds < 10 ? `0${remainingSeconds}` : `${remainingSeconds}`;
-    return `00:${formattedMinutes}:${formattedSeconds}`;
+    return `${hours.toString().padStart(2, "0")}:${minutes
+      .toString()
+      .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
   const handleStartStop = () => {
