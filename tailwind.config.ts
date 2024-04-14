@@ -20,6 +20,7 @@ const config: Config = {
           800: "#2d3748",
           900: "#1a202c",
         },
+        "custom-gray": "rgba(34, 34, 34, 0.5)",
       },
       boxShadow: {
         custom: "0px 2px 8px 0px rgba(0, 0, 0, 0.15)",
