@@ -23,6 +23,7 @@ interface TaskModalProps {
   setTimeValue: (time: number | null) => void;
   handleTime: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleDeleteAll: () => void;
+  // handleInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onSaveButtonClick: () => void;
   showModal: boolean;
@@ -59,8 +60,28 @@ const TaskModal: React.FC<
     setTimeValue(0);
   };
 
-  const handleResizeHeight = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const textareaRef = useRef(null);
+
+  const handleResizeHeight = (
+    // event: React.ChangeEvent<HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const trimmedValue = event.target.value;
+    // const textarea = textareaRef.current;
+    // if (!textarea) return;
+
+    // // 텍스트에어리어의 높이를 "auto"로 설정하여 실제 높이를 계산
+    // textarea.style.height = "auto";
+    // const scrollHeight = textarea.scrollHeight;
+    // if (scrollHeight > 76) {
+    //   // 76px를 초과하는 경우 이전 값을 사용하고 더 이상의 입력을 허용하지 않음
+    //   event.preventDefault();
+    //   textarea.value = editInputValue; // 이전 값으로 되돌림
+    // } else {
+    //   // 76px 이하인 경우 정상적으로 값 설정
+    //   textarea.style.height = `${scrollHeight}px`;
+    //   setEditInputValue(trimmedValue);
+    // }
     setEditInputValue(trimmedValue);
   };
 
@@ -70,6 +91,9 @@ const TaskModal: React.FC<
       setEditInputValue("");
       setSelectedTime(0);
       setSelectedColor("");
+      // if (textareaRef.current) {
+      //   textareaRef.current.style.height = "50px"; // 모달이 닫힐 때 높이 초기화
+      // }
     }
   }, [showModal]);
 
@@ -79,10 +103,10 @@ const TaskModal: React.FC<
       className={`${
         isEditTodoItem
           ? "fixed right-0 left-0 bottom-0 bg-black bg-opacity-50 z-50 top-[60px]"
-          : "absolute top-[380px]"
+          : "absolute top-[369px] rounded-xl"
       } flex justify-center items-center shadow-custom`}
     >
-      <div className=" inset-x-0 bottom-50 w-[360px] bg-opacity-50 flex justify-start items-center">
+      <div className="inset-x-0 bottom-50 w-[360px] bg-opacity-50 flex justify-start items-center">
         <div
           className="px-[20px] py-[24px] w-full h-full flex rounded-xl flex-col"
           style={{
@@ -91,9 +115,17 @@ const TaskModal: React.FC<
           }}
         >
           {isEditTodoItem && (
-            <div className="relative w-full gap-x-[8px] mb-[24px]">
+            <div className="relative w-[320px] mb-[24px]">
+              {/* <textarea
+                className="flex w-[318px] border-1 outline-none rounded-lg px-[16px] py-[12px] text-start border-gray-500 text-gray-700 pr-10"
+                style={{ border: "1px solid #00000026", height: "50px" }}
+                value={editInputValue}
+                ref={textareaRef}
+                onChange={handleResizeHeight}
+                placeholder="Todo명은 최대 2줄까지 입력할 수 있습니다."
+              /> */}
               <input
-                className="flex w-[320px] h-[50px] border-1 rounded-lg px-[16px] py-[12px] text-start border-gray-500 text-gray-700"
+                className="flex w-[320px] h-[50px] border-1 rounded-lg px-[16px] py-[12px] text-start border-gray-500 text-gray-700 pr-10"
                 style={{ border: "1px solid #00000026" }}
                 value={editInputValue}
                 onChange={handleResizeHeight}
@@ -169,6 +201,7 @@ const TaskModal: React.FC<
                 style={{
                   color: isDarkMode ? "#FFFFFF" : "#000000",
                   border: "1px solid #D8DADC",
+                  outline: "none",
                 }}
                 onChange={(event) => handleTime(event)}
                 className="text-start h-[50px] w-full pl-4 pr-10 items-center rounded-lg"
@@ -246,10 +279,11 @@ export default function Home() {
     : 10;
   const [selectedTime, setSelectedTime] = useState<number>(initialSelectedTime);
   const [selectedTodoTask, setSelectedTodoTask] = useState<number | null>(null);
+  const [isEditTodoItem, setIsEditTodoItem] = useState<boolean>(false);
   const [initialValues, setInitialValues] = useState({
-    color: selectedColor,
-    time: selectedTime,
-    text: inputValue,
+    color: isEditTodoItem ? selectedColor : "black",
+    time: isEditTodoItem ? selectedTime : 0,
+    text: isEditTodoItem ? inputValue : "",
   });
   const initialDarkMode =
     typeof window !== "undefined"
@@ -257,7 +291,7 @@ export default function Home() {
       : false;
   const [isDarkMode, setIsDarkMode] = useState<boolean>(initialDarkMode);
   const [storedItems, setStoredItems] = useState<TodoItem[]>([]); // 상태로 변경
-  const [isEditTodoItem, setIsEditTodoItem] = useState<boolean>(false);
+
   useEffect(() => {
     const storedColor =
       typeof window !== "undefined"
@@ -318,9 +352,9 @@ export default function Home() {
     if (showModal && isEditTodoItem && selectedTodoTask !== null) {
       const task = todoItem[selectedTodoTask];
       setInitialValues({
-        color: task.selectedColor,
-        time: task.selectedTime,
-        text: task.text,
+        color: isEditTodoItem ? task.selectedColor : "black",
+        time: isEditTodoItem ? task.selectedTime : 0,
+        text: isEditTodoItem ? task.text : "",
       });
       // Ensure the input fields are also updated to reflect the selected task's data
       setInputValue(task.text);
@@ -366,6 +400,27 @@ export default function Home() {
       );
     }
   };
+
+  // const textareaRef = useRef(null);
+
+  // const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  //   const trimmedValue = event.target.value;
+  //   const textarea = textareaRef.current;
+  //   if (!textarea) return;
+
+  //   // 텍스트에어리어의 높이를 "auto"로 설정하여 실제 높이를 계산
+  //   textarea.style.height = "auto";
+  //   const scrollHeight = textarea.scrollHeight;
+  //   if (scrollHeight > 76) {
+  //     // 76px를 초과하는 경우 이전 값을 사용하고 더 이상의 입력을 허용하지 않음
+  //     event.preventDefault();
+  //     textarea.value = inputValue; // 이전 값으로 되돌림
+  //   } else {
+  //     // 76px 이하인 경우 정상적으로 값 설정
+  //     textarea.style.height = `${scrollHeight}px`;
+  //   }
+  //   setInputValue(trimmedValue);
+  // };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const trimmedValue = event.target.value;
@@ -447,6 +502,7 @@ export default function Home() {
     setSelectedTime(0);
     setSelectedTodoTask(null);
     setShowModal(false);
+    setInitialValues({ color: "", time: 0, text: "" });
   };
 
   const toggleDarkMode = () => {
@@ -476,12 +532,20 @@ export default function Home() {
             >
               <div className="flex flex-row">
                 <input
-                  className="flex w-[296px] h-[56px] border-1 rounded-lg px-5 py-4 text-start"
+                  className="flex w-[296px] h-[56px] outline-none border-1 rounded-lg px-5 py-4 text-start"
                   style={{ border: "1px solid #27272766", color: "#22222280" }}
                   value={inputValue}
                   onChange={(event) => handleInputChange(event)}
                   placeholder="Todo를 적어주세요."
                 ></input>
+                {/* <textarea
+                  className="flex w-[296px] border-1 outline-none rounded-lg px-[20px] py-[16px] text-start border-gray-500 text-gray-700"
+                  style={{ border: "1px solid #00000026", height: "56px" }}
+                  value={inputValue}
+                  ref={textareaRef}
+                  onChange={(event) => handleInputChange(event)}
+                  placeholder="Todo를 적어주세요."
+                /> */}
                 <button
                   className="w-[56px] h-[56px] ml-[8px] rounded-xl text-[30px]"
                   style={{
