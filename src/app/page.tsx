@@ -582,9 +582,9 @@ export default function Home() {
               />
             )}
           </div>
-          <div className="w-[640px] flex align-center justify-center">
+          <div className="w-[640px] h-[732px] flex ml-[40px] items-center justify-center">
             {selectedTodoTask !== null && !isEditTodoItem && (
-              <div className="flex flex-col max-w-[250px] max-h-[300px] items-center text-center justify-center relative">
+              <div className="flex flex-col max-w-[250px] max-h-[300px] items-center text-center justify-center">
                 <div className={`flex flex-col max-h-[200px] gap-y-[16px]`}>
                   <div
                     className={`w-[248px] h-[78px] text-[60px]`}
