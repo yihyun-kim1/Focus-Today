@@ -59,9 +59,7 @@ const TaskModal: React.FC<
     setTimeValue(0);
   };
 
-  const handleEditInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleResizeHeight = (event: React.ChangeEvent<HTMLInputElement>) => {
     const trimmedValue = event.target.value;
     setEditInputValue(trimmedValue);
   };
@@ -82,7 +80,7 @@ const TaskModal: React.FC<
         isEditTodoItem
           ? "fixed right-0 left-0 bottom-0 bg-black bg-opacity-50 z-50 top-[60px]"
           : "absolute top-[380px]"
-      } flex justify-center items-center`}
+      } flex justify-center items-center shadow-custom`}
     >
       <div className=" inset-x-0 bottom-50 w-[360px] bg-opacity-50 flex justify-start items-center">
         <div
@@ -93,12 +91,12 @@ const TaskModal: React.FC<
           }}
         >
           {isEditTodoItem && (
-            <div className="relative w-full mb-[24px]">
+            <div className="relative w-full gap-x-[8px] mb-[24px]">
               <input
-                className="flex w-full h-[56px] border-1 rounded-lg px-5 py-4 text-start border-gray-500 text-gray-700 pr-10"
+                className="flex w-[320px] h-[50px] border-1 rounded-lg px-[16px] py-[12px] text-start border-gray-500 text-gray-700"
                 style={{ border: "1px solid #00000026" }}
                 value={editInputValue}
-                onChange={handleEditInputChange}
+                onChange={handleResizeHeight}
                 placeholder="Todo명은 최대 2줄까지 입력할 수 있습니다."
               />
               <img
