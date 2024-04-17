@@ -1,4 +1,5 @@
 import React from "react";
+import { usePathname } from "next/navigation";
 
 interface LogoAndModeProps {
   isDarkMode: boolean;
@@ -12,6 +13,8 @@ export const LogoAndMode: React.FC<LogoAndModeProps> = ({
   isDarkMode: boolean;
   toggleDarkMode: () => void;
 }) => {
+  const pathname = usePathname();
+
   return (
     <div className="flex flex-row py-[10px] h-[60px] items-center justify-between">
       <div className="flex flex-row items-center">
@@ -23,28 +26,30 @@ export const LogoAndMode: React.FC<LogoAndModeProps> = ({
           focus today
         </div>
       </div>
-      <div
-        className="flex flex-row"
-        style={{ color: `${isDarkMode ? "#FFFFFF" : "#000000"}` }}
-      >
-        Dark mode:
-        <button
-          className={`ml-2 w-[40px] h-[22px] rounded-full bg-gray-300 relative focus:outline-none overflow-hidden transition-all duration-300 ${
-            isDarkMode ? "bg-white" : "bg-gray-300"
-          }`}
-          style={{ border: "1px solid black" }}
-          onClick={toggleDarkMode}
+      {pathname !== "/task" && (
+        <div
+          className="flex flex-row"
+          style={{ color: `${isDarkMode ? "#FFFFFF" : "#000000"}` }}
         >
-          <div
-            className={`left-1 w-[15px] h-[15px] items-center rounded-full transition-transform duration-300 transform ${
-              isDarkMode
-                ? "translate-x-[21px] bg-black"
-                : "translate-x-0.5  bg-white"
+          Dark mode:
+          <button
+            className={`ml-2 w-[40px] h-[22px] rounded-full bg-gray-300 relative focus:outline-none overflow-hidden transition-all duration-300 ${
+              isDarkMode ? "bg-white" : "bg-gray-300"
             }`}
             style={{ border: "1px solid black" }}
-          ></div>
-        </button>
-      </div>
+            onClick={toggleDarkMode}
+          >
+            <div
+              className={`left-1 w-[15px] h-[15px] items-center rounded-full transition-transform duration-300 transform ${
+                isDarkMode
+                  ? "translate-x-[21px] bg-black"
+                  : "translate-x-0.5  bg-white"
+              }`}
+              style={{ border: "1px solid black" }}
+            ></div>
+          </button>
+        </div>
+      )}
     </div>
   );
 };

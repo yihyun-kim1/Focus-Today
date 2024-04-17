@@ -24,14 +24,14 @@ export default function Task() {
   );
   const [timerId, setTimerId] = useState<number | null>(null); // 타이머 ID
   const [isRunning, setIsRunning] = useState(true);
+  const [showControlButtons, setShowControlButtons] = useState(false);
   const [timerFinished, setTimerFinished] = useState(false);
 
   useEffect(() => {
-    // URL 쿼리 매개변수 파싱
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const timeParam = urlParams.get("time");
-    const parsedTime = parseInt(timeParam || "0") * 60; // 분을 초로 변환
+    const parsedTime = parseInt(timeParam || "0") * 60; // 분 -> 초로 변환
 
     setCountdown(parsedTime);
     setIsRunning(true);
@@ -61,6 +61,8 @@ export default function Task() {
           if (prevCountdown === 0) {
             clearInterval(id);
             setIsRunning(false);
+            setTimerFinished(true);
+            setShowControlButtons(false);
             return 0;
           } else {
             return prevCountdown - 1;
@@ -81,17 +83,19 @@ export default function Task() {
       .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  const handleStartStop = () => {
-    if (isRunning || timerFinished) {
-      setIsRunning(false);
-      setTimerFinished(false);
-    } else {
-      setIsRunning(true);
-    }
+  const handlePause = () => {
+    setIsRunning(false);
+    setShowControlButtons(true);
   };
 
-  const handleRestart = () => {
+  const handleResume = () => {
     setIsRunning(true);
+    setShowControlButtons(false);
+  };
+
+  const handleReset = () => {
+    setIsRunning(true);
+    setShowControlButtons(false);
     setTimerFinished(false);
     setCountdown(
       typeof window !== "undefined"
@@ -100,8 +104,8 @@ export default function Task() {
     );
   };
 
-  const handleFinish = () => {
-    router.back(); // 이전 페이지로 돌아가기
+  const handleStop = () => {
+    router.back();
   };
 
   const toggleDarkMode = () => {
@@ -141,59 +145,143 @@ export default function Task() {
                 : isDarkMode
                 ? "rgba(0, 0, 0, "
                 : "rgba(255, 255, 255, "
-            }${timerFinished ? "0.7)" : "1)"}`,
+            }${timerFinished || !isRunning ? "0.7)" : "1)"}`,
           }}
         >
           {formatTime(countdown)}
         </div>
         <div className="mt-4">
           <div className="flex flex-col items-center justify-center gap-y-[8px]">
-            <button
-              style={{
-                color: `${
-                  selectedColor !== "black"
-                    ? selectedColor
-                    : isDarkMode
-                    ? "white"
-                    : "black"
-                }`,
-              }}
-              className={`w-[248px] h-[66px] py-4 px-6 rounded-lg text-lg
-                            ${
-                              selectedColor === "black" && isDarkMode
-                                ? "bg-black text-white"
-                                : "bg-white text-" + selectedColor
-                            }`}
-              onClick={
-                isRunning
-                  ? handleStartStop
-                  : timerFinished
-                  ? handleRestart
-                  : handleStartStop
-              }
-            >
-              {isRunning ? "Pause" : timerFinished ? "Restart" : "Start"}
-            </button>
-            <button
-              style={{
-                color: `${
-                  selectedColor !== "black"
-                    ? selectedColor
-                    : isDarkMode
-                    ? "white"
-                    : "black"
-                }`,
-              }}
-              className={`w-[248px] h-[66px] py-4 px-6 opacity-[80%] rounded-lg text-lg
-                            ${
-                              selectedColor === "black" && isDarkMode
-                                ? "bg-black text-white"
-                                : "bg-white text-" + selectedColor
-                            }`}
-              onClick={handleFinish}
-            >
-              Finish
-            </button>
+            {!showControlButtons && isRunning && (
+              <button
+                style={{
+                  color: `${
+                    selectedColor !== "black"
+                      ? selectedColor
+                      : isDarkMode
+                      ? "white"
+                      : "black"
+                  }`,
+                }}
+                className={`w-[248px] h-[66px] py-4 px-6 rounded-lg text-lg
+                          ${
+                            selectedColor === "black" && isDarkMode
+                              ? "bg-black text-white"
+                              : "bg-white text-" + selectedColor
+                          }`}
+                onClick={handlePause}
+              >
+                Pause
+              </button>
+            )}
+            {showControlButtons && !timerFinished && (
+              <>
+                <button
+                  style={{
+                    color: `${
+                      selectedColor !== "black"
+                        ? selectedColor
+                        : isDarkMode
+                        ? "white"
+                        : "black"
+                    }`,
+                  }}
+                  className={`w-[248px] h-[66px] py-4 px-6 rounded-lg text-lg
+                          ${
+                            selectedColor === "black" && isDarkMode
+                              ? "bg-black text-white"
+                              : "bg-white text-" + selectedColor
+                          }`}
+                  onClick={handleResume}
+                >
+                  Resume
+                </button>
+                <button
+                  style={{
+                    color: `${
+                      selectedColor !== "black"
+                        ? selectedColor
+                        : isDarkMode
+                        ? "white"
+                        : "black"
+                    }`,
+                  }}
+                  className={`w-[248px] h-[66px] py-4 px-6 rounded-lg text-lg
+                          ${
+                            selectedColor === "black" && isDarkMode
+                              ? "bg-black text-white"
+                              : "bg-white text-" + selectedColor
+                          }`}
+                  onClick={handleReset}
+                >
+                  Reset
+                </button>
+                <button
+                  style={{
+                    color: `${
+                      selectedColor !== "black"
+                        ? selectedColor
+                        : isDarkMode
+                        ? "white"
+                        : "black"
+                    }`,
+                  }}
+                  className={`w-[248px] opacity-[80%] h-[66px] py-4 px-6 rounded-lg text-lg
+                          ${
+                            selectedColor === "black" && isDarkMode
+                              ? "bg-black text-white"
+                              : "bg-white text-" + selectedColor
+                          }`}
+                  onClick={handleStop}
+                >
+                  Stop
+                </button>
+              </>
+            )}
+            {!isRunning && timerFinished && (
+              <>
+                <button
+                  style={{
+                    color: `${
+                      selectedColor !== "black"
+                        ? selectedColor
+                        : isDarkMode
+                        ? "white"
+                        : "black"
+                    }`,
+                  }}
+                  className={`w-[248px] h-[66px] py-4 px-6 rounded-lg text-lg
+                          ${
+                            selectedColor === "black" && isDarkMode
+                              ? "bg-black text-white"
+                              : "bg-white text-" + selectedColor
+                          }`}
+                  onClick={handleReset}
+                >
+                  Reset
+                </button>
+                <button
+                  style={{
+                    color: `${
+                      selectedColor !== "black"
+                        ? selectedColor
+                        : isDarkMode
+                        ? "white"
+                        : "black"
+                    }`,
+                  }}
+                  className={`w-[248px] h-[66px] opacity-[80%] py-4 px-6 rounded-lg text-lg
+                          ${
+                            selectedColor === "black" && isDarkMode
+                              ? "bg-black text-white"
+                              : "bg-white text-" + selectedColor
+                          }`}
+                  onClick={handleStop}
+                >
+                  Stop
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

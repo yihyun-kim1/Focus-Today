@@ -6,240 +6,241 @@ import { LogoAndMode } from "@/components/LogoAndMode";
 import TextareaAutosize, {
   TextareaHeightChangeMeta,
 } from "react-textarea-autosize";
+import TaskModal, { TodoItem } from "@/components/TaskModal";
 
-interface TodoItem {
-  text: string;
-  selectedTime: number;
-  selectedColor: string;
-}
+// interface TodoItem {
+//   text: string;
+//   selectedTime: number;
+//   selectedColor: string;
+// }
 
-interface TaskModalProps {
-  isEditTodoItem: boolean;
-  isDarkMode: boolean;
-  selectedColor: string;
-  setSelectedColor: (color: string) => void;
-  setInputValue: (inputValue: string) => void;
-  setEditInputValue: (editInputValue: string) => void;
-  selectedTime: number;
-  setSelectedTime: (time: number) => void;
-  timeValue: number | null;
-  setTimeValue: (time: number | null) => void;
-  handleTime: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleDeleteAll: () => void;
-  handleInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  onSaveButtonClick: () => void;
-  showModal: boolean;
-  initialValues: { color: string; time: number; text: string };
-  textareaHeight: number;
-}
+// interface TaskModalProps {
+//   isEditTodoItem: boolean;
+//   isDarkMode: boolean;
+//   selectedColor: string;
+//   setSelectedColor: (color: string) => void;
+//   setInputValue: (inputValue: string) => void;
+//   setEditInputValue: (editInputValue: string) => void;
+//   selectedTime: number;
+//   setSelectedTime: (time: number) => void;
+//   timeValue: number | null;
+//   setTimeValue: (time: number | null) => void;
+//   handleTime: (event: React.ChangeEvent<HTMLInputElement>) => void;
+//   handleDeleteAll: () => void;
+//   handleInputChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+//   onSaveButtonClick: () => void;
+//   showModal: boolean;
+//   initialValues: { color: string; time: number; text: string };
+//   textareaHeight: number;
+// }
 
-const TaskModal: React.FC<
-  TaskModalProps & { inputValue: string; editInputValue: string }
-> = ({
-  isEditTodoItem,
-  isDarkMode,
-  selectedColor,
-  setSelectedColor,
-  selectedTime,
-  setSelectedTime,
-  handleTime,
-  handleDeleteAll,
-  setEditInputValue,
-  onSaveButtonClick,
-  inputValue,
-  editInputValue,
-  setInputValue,
-  timeValue,
-  setTimeValue,
-  showModal,
-  initialValues,
-  textareaHeight,
-}) => {
-  const clearInputValue = () => {
-    setEditInputValue("");
-  };
+// const TaskModal: React.FC<
+//   TaskModalProps & { inputValue: string; editInputValue: string }
+// > = ({
+//   isEditTodoItem,
+//   isDarkMode,
+//   selectedColor,
+//   setSelectedColor,
+//   selectedTime,
+//   setSelectedTime,
+//   handleTime,
+//   handleDeleteAll,
+//   setEditInputValue,
+//   onSaveButtonClick,
+//   inputValue,
+//   editInputValue,
+//   setInputValue,
+//   timeValue,
+//   setTimeValue,
+//   showModal,
+//   initialValues,
+//   textareaHeight,
+// }) => {
+//   const clearInputValue = () => {
+//     setEditInputValue("");
+//   };
 
-  const clearTimeValue = () => {
-    setSelectedTime(Number(0));
-    setTimeValue(0);
-  };
+//   const clearTimeValue = () => {
+//     setSelectedTime(Number(0));
+//     setTimeValue(0);
+//   };
 
-  const handleResizeHeight = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    const trimmedValue = event.target.value;
-    setEditInputValue(trimmedValue);
-  };
+//   const handleResizeHeight = (
+//     event: React.ChangeEvent<HTMLTextAreaElement>
+//   ) => {
+//     const trimmedValue = event.target.value;
+//     setEditInputValue(trimmedValue);
+//   };
 
-  useEffect(() => {
-    if (!showModal) {
-      setInputValue("");
-      setEditInputValue("");
-      setSelectedTime(0);
-      setSelectedColor("");
-    }
-  }, [showModal]);
+//   useEffect(() => {
+//     if (!showModal) {
+//       setInputValue("");
+//       setEditInputValue("");
+//       setSelectedTime(0);
+//       setSelectedColor("");
+//     }
+//   }, [showModal]);
 
-  const calculateTop = () => {
-    if (isEditTodoItem) {
-      return "60px"; // 수정 모드일 때 상단 고정
-    } else {
-      return textareaHeight > 58 ? "390px" : "369px"; // 뷰 모드일 때 조건부 위치
-    }
-  };
-  console.log(textareaHeight, "???????");
-  return (
-    <div
-      className={`${
-        isEditTodoItem
-          ? "fixed right-0 left-0 bottom-0 bg-black bg-opacity-50 z-50 "
-          : "absolute"
-      } flex justify-center items-center shadow-custom`}
-      style={{ top: calculateTop() }}
-    >
-      <div className="inset-x-0 bottom-50 w-[360px] bg-opacity-50 flex justify-start items-center">
-        <div
-          className="px-[20px] py-[24px] w-full h-full flex rounded-xl flex-col"
-          style={{
-            border: "1px solid #27272766",
-            backgroundColor: "#FFFFFF",
-          }}
-        >
-          {isEditTodoItem && (
-            <div className="relative w-[320px] mb-[24px]">
-              <TextareaAutosize
-                cacheMeasurements
-                className="flex w-[318px] min-h-[50px] max-h-[76px] overflow-hidden border-1 outline-none rounded-lg px-[16px] py-[12px] text-start border-gray-500 text-gray-700 pr-10 placeholder-custom-gray"
-                style={{ border: "1px solid #27272766" }}
-                minRows={1}
-                maxRows={2}
-                value={editInputValue}
-                maxLength={35}
-                onChange={handleResizeHeight}
-                placeholder="Todo명은 최대 2줄까지 입력할 수 있습니다."
-              />
-              <img
-                src="/close.svg"
-                alt="Close"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
-                onClick={clearInputValue}
-                style={{ width: "20px", height: "20px" }}
-              />
-            </div>
-          )}
-          <h2
-            className="text-lg w-[320px] h-[26px] mb-[8px]"
-            style={{ color: "#000000" }}
-          >
-            컬러
-          </h2>
-          <div className="flex flex-row w-[200px] h-[32px] gap-x-[12px] relative">
-            {[
-              { color: "black", hex: "black" },
-              { color: "pink", hex: "#EE81C8" },
-              { color: "orange", hex: "#FF734B" },
-              { color: "yellow", hex: "#FFD44F" },
-              { color: "green", hex: "#35C792" },
-            ].map((btnColor) => (
-              <div key={btnColor.color} className="relative w-[32px] h-[32px]">
-                <button
-                  className={"flex w-full h-full rounded-md text-white"}
-                  style={{ backgroundColor: btnColor.hex }}
-                  onClick={() => setSelectedColor(btnColor.hex)}
-                ></button>
-                {selectedColor === btnColor.hex && (
-                  <img
-                    src="/check.svg"
-                    alt="check"
-                    className="absolute inset-0 m-auto"
-                    style={{ width: "16px", height: "16px" }}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-          <div className="flex flex-col">
-            <h2 className="mt-[24px] text-lg" style={{ color: "#000000" }}>
-              포커스 시간
-            </h2>
-            <div className="flex flex-row w-full mt-[8px] gap-x-[12px] ">
-              {[10, 15, 20, 25, 30, 45, 55].map((time) => (
-                <button
-                  key={time}
-                  className={`flex w-[35.5px] h-[44px] text-center items-center justify-center border rounded-md mb-2 text-[17px] ${
-                    selectedTime == time
-                      ? "bg-black text-white"
-                      : "text-black bg-gray-300"
-                  }`}
-                  onClick={() => {
-                    setSelectedTime(time);
-                    setTimeValue(time);
-                  }}
-                >
-                  {time}
-                </button>
-              ))}
-            </div>
-            <div className="relative mt-[12px] w-[320px]">
-              <input
-                type="number"
-                value={timeValue !== null ? timeValue.toString() : ""}
-                placeholder="직접입력 (분으로만 적어주세요)"
-                style={{
-                  color: isDarkMode ? "#FFFFFF" : "#000000",
-                  border: "1px solid #D8DADC",
-                  outline: "none",
-                }}
-                onChange={(event) => handleTime(event)}
-                className="text-start h-[50px] w-full pl-4 pr-10 items-center rounded-lg"
-              />
-              <img
-                src="/close.svg"
-                alt="Close"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
-                onClick={clearTimeValue}
-              />
-            </div>
-          </div>
-          <div className="flex flex-row mt-[28px] w-[320px] gap-x-[8px]">
-            <button
-              className="flex-1 w-[156px] h-[44px] rounded-md bg-white text-black mr-2"
-              style={{ border: "1px solid black" }}
-              onClick={handleDeleteAll}
-            >
-              Delete
-            </button>
-            <button
-              className={`flex-1 w-[156px] h-[44px] rounded-md ${
-                isEditTodoItem
-                  ? initialValues.color !== selectedColor ||
-                    initialValues.time !== selectedTime ||
-                    initialValues.text.trim() !== editInputValue.trim()
-                    ? "bg-black text-white"
-                    : "bg-gray-300 text-white"
-                  : ((timeValue !== null && timeValue > 0) ||
-                      selectedTime > 0) &&
-                    selectedColor &&
-                    inputValue.length > 0
-                  ? "bg-black text-white"
-                  : "bg-gray-300 text-white"
-              }`}
-              onClick={onSaveButtonClick}
-              disabled={
-                isEditTodoItem &&
-                initialValues.color === selectedColor &&
-                initialValues.time === selectedTime &&
-                initialValues.text.trim() === editInputValue.trim()
-              }
-            >
-              Save
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+//   const calculateTop = () => {
+//     if (isEditTodoItem) {
+//       return "60px"; // 수정 모드일 때 상단 고정
+//     } else {
+//       return textareaHeight > 58 ? "390px" : "366px"; // 뷰 모드일 때 조건부 위치
+//     }
+//   };
+//   console.log(textareaHeight, "???????");
+//   return (
+//     <div
+//       className={`${
+//         isEditTodoItem
+//           ? "fixed right-0 left-0 bottom-0 bg-black bg-opacity-50 z-50 "
+//           : "absolute rounded-xl"
+//       } flex justify-center items-center shadow-custom`}
+//       style={{ top: calculateTop() }}
+//     >
+//       <div className="inset-x-0 bottom-50 w-[360px] bg-opacity-50 flex justify-start items-center">
+//         <div
+//           className="px-[20px] py-[24px] w-full h-full flex rounded-xl flex-col"
+//           style={{
+//             border: "1px solid #27272766",
+//             backgroundColor: "#FFFFFF",
+//           }}
+//         >
+//           {isEditTodoItem && (
+//             <div className="relative w-[320px] mb-[24px]">
+//               <TextareaAutosize
+//                 cacheMeasurements
+//                 className="flex w-[318px] min-h-[50px] resize-none max-h-[76px] overflow-hidden border-1 outline-none rounded-lg px-[16px] py-[12px] text-start border-gray-500 text-gray-700 pr-10 placeholder-custom-gray"
+//                 style={{ border: "1px solid #27272766" }}
+//                 minRows={1}
+//                 maxRows={2}
+//                 value={editInputValue}
+//                 maxLength={35}
+//                 onChange={handleResizeHeight}
+//                 placeholder="Todo명은 최대 2줄까지 입력할 수 있습니다."
+//               />
+//               <img
+//                 src="/close.svg"
+//                 alt="Close"
+//                 className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+//                 onClick={clearInputValue}
+//                 style={{ width: "20px", height: "20px" }}
+//               />
+//             </div>
+//           )}
+//           <h2
+//             className="text-lg w-[320px] h-[26px] mb-[8px]"
+//             style={{ color: "#000000" }}
+//           >
+//             컬러
+//           </h2>
+//           <div className="flex flex-row w-[200px] h-[32px] gap-x-[12px] relative">
+//             {[
+//               { color: "black", hex: "black" },
+//               { color: "pink", hex: "#EE81C8" },
+//               { color: "orange", hex: "#FF734B" },
+//               { color: "yellow", hex: "#FFD44F" },
+//               { color: "green", hex: "#35C792" },
+//             ].map((btnColor) => (
+//               <div key={btnColor.color} className="relative w-[32px] h-[32px]">
+//                 <button
+//                   className={"flex w-full h-full rounded-md text-white"}
+//                   style={{ backgroundColor: btnColor.hex }}
+//                   onClick={() => setSelectedColor(btnColor.hex)}
+//                 ></button>
+//                 {selectedColor === btnColor.hex && (
+//                   <img
+//                     src="/check.svg"
+//                     alt="check"
+//                     className="absolute inset-0 m-auto"
+//                     style={{ width: "16px", height: "16px" }}
+//                   />
+//                 )}
+//               </div>
+//             ))}
+//           </div>
+//           <div className="flex flex-col">
+//             <h2 className="mt-[24px] text-lg" style={{ color: "#000000" }}>
+//               포커스 시간
+//             </h2>
+//             <div className="flex flex-row w-full mt-[8px] gap-x-[12px] ">
+//               {[10, 15, 20, 25, 30, 45, 55].map((time) => (
+//                 <button
+//                   key={time}
+//                   className={`flex w-[35.5px] h-[44px] text-center items-center justify-center border rounded-md mb-2 text-[17px] ${
+//                     selectedTime == time
+//                       ? "bg-black text-white"
+//                       : "text-black bg-gray-300"
+//                   }`}
+//                   onClick={() => {
+//                     setSelectedTime(time);
+//                     setTimeValue(time);
+//                   }}
+//                 >
+//                   {time}
+//                 </button>
+//               ))}
+//             </div>
+//             <div className="relative mt-[12px] w-[320px]">
+//               <input
+//                 type="number"
+//                 value={timeValue !== null ? timeValue.toString() : ""}
+//                 placeholder="직접입력 (분으로만 적어주세요)"
+//                 style={{
+//                   color: isDarkMode ? "#FFFFFF" : "#000000",
+//                   border: "1px solid #D8DADC",
+//                   outline: "none",
+//                 }}
+//                 onChange={(event) => handleTime(event)}
+//                 className="text-start h-[50px] w-full pl-4 pr-10 items-center rounded-lg"
+//               />
+//               <img
+//                 src="/close.svg"
+//                 alt="Close"
+//                 className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
+//                 onClick={clearTimeValue}
+//               />
+//             </div>
+//           </div>
+//           <div className="flex flex-row mt-[28px] w-[320px] gap-x-[8px]">
+//             <button
+//               className="flex-1 w-[156px] h-[44px] rounded-md bg-white text-black mr-2"
+//               style={{ border: "1px solid black" }}
+//               onClick={handleDeleteAll}
+//             >
+//               Delete
+//             </button>
+//             <button
+//               className={`flex-1 w-[156px] h-[44px] rounded-md ${
+//                 isEditTodoItem
+//                   ? initialValues.color !== selectedColor ||
+//                     initialValues.time !== selectedTime ||
+//                     initialValues.text.trim() !== editInputValue.trim()
+//                     ? "bg-black text-white"
+//                     : "bg-gray-300 text-white"
+//                   : ((timeValue !== null && timeValue > 0) ||
+//                       selectedTime > 0) &&
+//                     selectedColor &&
+//                     inputValue.length > 0
+//                   ? "bg-black text-white"
+//                   : "bg-gray-300 text-white"
+//               }`}
+//               onClick={onSaveButtonClick}
+//               disabled={
+//                 isEditTodoItem &&
+//                 initialValues.color === selectedColor &&
+//                 initialValues.time === selectedTime &&
+//                 initialValues.text.trim() === editInputValue.trim()
+//               }
+//             >
+//               Save
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
 
 export default function Home() {
   const router = useRouter();
@@ -266,6 +267,7 @@ export default function Home() {
     : 10;
   const [selectedTime, setSelectedTime] = useState<number>(initialSelectedTime);
   const [selectedTodoTask, setSelectedTodoTask] = useState<number | null>(null);
+  const [textareaHeight, setTextareaHeight] = useState(0);
   const [isEditTodoItem, setIsEditTodoItem] = useState<boolean>(false);
   const [initialValues, setInitialValues] = useState({
     color: isEditTodoItem ? selectedColor : "black",
@@ -389,8 +391,11 @@ export default function Home() {
   };
 
   const handleTime = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = event.target.value;
-    const parsedValue = inputValue !== "" ? parseInt(inputValue) : null;
+    if (event.target.value.length > 3) {
+      event.target.value = event.target.value.slice(0, 3);
+    }
+    const parsedValue =
+      event.target.value !== "" ? parseInt(event.target.value) : null;
     setTimeValue(parsedValue);
     setSelectedTime(parsedValue || 0);
   };
@@ -461,23 +466,21 @@ export default function Home() {
     setInputValue("");
     setSelectedColor("");
     setSelectedTime(0);
+    setIsEditTodoItem(false);
     setSelectedTodoTask(null);
     setShowModal(false);
-    setInitialValues({ color: "", time: 0, text: "" });
   };
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
   };
 
-  const [textareaHeight, setTextareaHeight] = useState(0); // 초기 높이 상태
-
-  // Textarea 높이 변경 시 호출될 함수
+  // Textarea 높이 변경 함수
   const handleHeightChange = (
     height: number,
     meta: TextareaHeightChangeMeta
   ) => {
-    setTextareaHeight(height); // 높이 상태 업데이트
+    setTextareaHeight(height);
   };
 
   return (
@@ -485,10 +488,10 @@ export default function Home() {
       className="flex fixed w-full items-center justify-center"
       style={{ backgroundColor: `${!isDarkMode ? "#FFFFFF" : "#000000"}` }}
     >
-      <div className="flex flex-col w-[1040px] min-h-screen">
+      <div className="flex flex-col w-[1040px] h-screen">
         <LogoAndMode isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
-        <div className="w-[1040px] max-h-[867px] mb-[105px] mt-[56px] flex flex-row">
-          <div className="w-[360px] ">
+        <div className="w-[1040px] mb-[64px] mt-[56px] flex flex-row">
+          <div className="w-[360px] h-[867px]">
             <h1
               className="text-[40px]"
               style={{ color: `${isDarkMode ? "#FFFFFF" : "#000000"}` }}
@@ -504,7 +507,7 @@ export default function Home() {
               <div className="flex flex-row">
                 <TextareaAutosize
                   cacheMeasurements
-                  className="flex w-[296px] border-1 outline-none rounded-lg px-[20px] py-[16px]  border-gray-500 text-gray-700 placeholder-custom-gray"
+                  className="flex w-[360px] resize-none border-1 outline-none rounded-lg px-[20px] py-[16px]  border-gray-500 text-gray-700 placeholder-custom-gray"
                   style={{ border: "1px solid #27272766" }}
                   value={inputValue}
                   minRows={1}
@@ -514,16 +517,6 @@ export default function Home() {
                   onHeightChange={handleHeightChange}
                   placeholder="Todo를 적어주세요."
                 />
-                <button
-                  className="w-[56px] h-[56px] ml-[8px] rounded-xl text-[30px]"
-                  style={{
-                    color: `${!isDarkMode ? "#FFFFFF" : "#000000"}`,
-                    backgroundColor: `${isDarkMode ? "#FFFFFF" : "#000000"}`,
-                  }}
-                  onClick={() => setShowModal(true)}
-                >
-                  +
-                </button>
               </div>
             </div>
             <div className="max-h-[618px] overflow-y-scroll">
@@ -531,14 +524,16 @@ export default function Home() {
                 <div
                   key={index}
                   style={{
-                    border: `1px solid ${
+                    border: `solid ${
                       selectedTodoTask === index
-                        ? `${item.selectedColor}`
-                        : "#27272766"
-                    }`, // 선택된 경우 2px로 조건 주기
+                        ? `2px ${item.selectedColor}`
+                        : "1px #27272766"
+                    }`,
                     borderColor:
                       selectedTodoTask === index
                         ? `${item.selectedColor}`
+                        : isDarkMode
+                        ? "#FFFFFF4D"
                         : "#27272766",
                   }}
                   className={`rounded-xl w-full px-[16px] py-[16px] mb-2 h-[136px] cursor-pointer todo-task`}
@@ -574,7 +569,7 @@ export default function Home() {
                   <br />
                   <div
                     style={{ color: `${isDarkMode ? "#FFFFFF" : "#000000"}` }}
-                    className="mt-[12px] text-[20px] max-w-[380px] overflow-hidden truncate line-clamp-20"
+                    className="mt-[12px] text-[16px] max-w-[380px] overflow-hidden truncate line-clamp-20"
                   >
                     {item.text}
                   </div>
