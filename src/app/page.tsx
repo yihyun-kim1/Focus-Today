@@ -273,9 +273,10 @@ export default function Home() {
               <div className="flex flex-row">
                 <TextareaAutosize
                   cacheMeasurements
-                  className="flex w-[360px] resize-none border-1 outline-none rounded-lg px-[20px] py-[16px]  border-gray-500 text-gray-700 placeholder-custom-gray"
+                  className="flex w-[360px] resize-none rounded-xl outline-none px-[20px] py-[16px]  border-gray-500 text-gray-700 placeholder-custom-gray"
                   style={{
                     border: "1px solid #27272766",
+                    // borderRadius: "12px",
                     boxShadow: "0px 1px 4px 0px #00000026",
                   }}
                   value={inputValue}
