@@ -285,7 +285,7 @@ export default function Home() {
                 />
               </div>
             </div>
-            <div className="max-h-[618px] overflow-y-scroll">
+            <div className="max-h-[600px] overflow-y-scroll">
               {todoItem.map((item, index) => (
                 <div
                   key={index}
