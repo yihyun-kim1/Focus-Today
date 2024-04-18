@@ -259,7 +259,7 @@ export default function Home() {
         <div className="w-[1040px] mb-[64px] mt-[56px] flex flex-row">
           <div className="w-[360px] h-[867px]">
             <h1
-              className="text-[40px]"
+              className="text-[36px] h-[100px]"
               style={{ color: `${isDarkMode ? "#FFFFFF" : "#000000"}` }}
             >
               Hello,
@@ -278,14 +278,14 @@ export default function Home() {
                   value={inputValue}
                   minRows={1}
                   maxRows={2}
-                  maxLength={35}
+                  maxLength={43}
                   onChange={(event) => handleInputChange(event)}
                   onHeightChange={handleHeightChange}
                   placeholder="Todo를 적어주세요."
                 />
               </div>
             </div>
-            <div className="max-h-[600px] overflow-y-scroll">
+            <div className="max-h-[618px] overflow-y-scroll">
               {todoItem.map((item, index) => (
                 <div
                   key={index}
@@ -332,12 +332,11 @@ export default function Home() {
                       Edit
                     </div>
                   </div>
-                  <br />
                   <div
                     style={{ color: `${isDarkMode ? "#FFFFFF" : "#000000"}` }}
-                    className="mt-[12px] text-[16px] max-w-[380px] overflow-hidden truncate line-clamp-20"
+                    className="mt-[12px] text-[16px] max-w-[380px] h-[44px] overflow-hidden"
                   >
-                    {item.text}
+                    <p className="line-clamp-2">{item.text}</p>
                   </div>
                   <div className="flex w-full h-[20px] py-[6px] px-[3px] flex-col items-end">
                     <img

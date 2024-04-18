@@ -78,10 +78,10 @@ export const TaskModal: React.FC<
     if (isEditTodoItem) {
       return "60px"; // 수정 모드일 때 상단 고정
     } else {
-      return textareaHeight > 58 ? "390px" : "366px"; // 뷰 모드일 때 조건부 위치
+      return textareaHeight > 58 ? "366px" : "346px"; // 뷰 모드일 때 조건부 위치
     }
   };
-  console.log(textareaHeight, "???????");
+
   return (
     <div
       className={`${
