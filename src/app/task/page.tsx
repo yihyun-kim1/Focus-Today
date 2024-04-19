@@ -1,13 +1,118 @@
 "use client";
-import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
-
-import "../globals.css";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { LogoAndMode } from "@/components/LogoAndMode";
+import "../globals.css";
+
+interface CustomButtonProps {
+  text: string;
+  onClick: () => void;
+  style: string;
+}
+
+interface CountdownComponentProps {
+  countdown: string;
+  selectedColor: string;
+  isDarkMode: boolean;
+  timerFinished: boolean;
+  isRunning: boolean;
+  setTimerIsFinished: any;
+}
+
+const CustomButton: React.FC<CustomButtonProps> = ({
+  text,
+  onClick,
+  style,
+}) => {
+  return (
+    <button
+      onClick={onClick}
+      className={`w-[248px] h-[66px] py-4 px-6 rounded-lg text-lg ${style}`}
+    >
+      {text}
+    </button>
+  );
+};
+
+const useInterval = (callback: () => void, delay: number | null) => {
+  const savedCallback = useRef(callback);
+
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  useEffect(() => {
+    function tick() {
+      if (savedCallback.current) {
+        savedCallback.current();
+      }
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+};
+
+const formatTime = (seconds: number) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+  return `${hours.toString().padStart(2, "0")}:${minutes
+    .toString()
+    .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+};
+
+const CountdownComponent: React.FC<CountdownComponentProps> = ({
+  selectedColor,
+  isDarkMode,
+  isRunning,
+  setTimerIsFinished,
+}) => {
+  const initialTime =
+    typeof window !== "undefined"
+      ? Number(localStorage.getItem("selectedTime") || 10) * 60
+      : 10 * 60;
+
+  const [countdown, setCountdown] = useState(initialTime);
+
+  useInterval(
+    () => {
+      if (countdown > 0 && isRunning) {
+        setCountdown(countdown - 1);
+      } else if (countdown === 0) {
+        setTimerIsFinished(true);
+      }
+    },
+    isRunning ? 1000 : null
+  );
+
+  const formattedTime = formatTime(countdown);
+
+  return (
+    <div
+      className="text-[56px] h-[78px]"
+      style={{
+        color: `${
+          selectedColor !== "black"
+            ? "rgba(255, 255, 255, "
+            : isDarkMode
+            ? "rgba(0, 0, 0, "
+            : "rgba(255, 255, 255, "
+        }${!isRunning ? "0.7)" : "1)"}`,
+      }}
+    >
+      {formattedTime}
+    </div>
+  );
+};
 
 export default function Task() {
-  const pathname = usePathname();
   const router = useRouter();
+  const [timerId, setTimerId] = useState<number | null>(null); // 타이머 ID
+  const [isRunning, setIsRunning] = useState(true);
+  const [showControlButtons, setShowControlButtons] = useState(false);
+  const [timerFinished, setTimerIsFinished] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(
     typeof window !== "undefined"
       ? localStorage.getItem("isDarkMode") === "true"
@@ -22,10 +127,11 @@ export default function Task() {
       ? Number(localStorage.getItem("selectedTime") || 10) * 60
       : 10 * 60
   );
-  const [timerId, setTimerId] = useState<number | null>(null); // 타이머 ID
-  const [isRunning, setIsRunning] = useState(true);
-  const [showControlButtons, setShowControlButtons] = useState(false);
-  const [timerFinished, setTimerFinished] = useState(false);
+
+  const buttonStyle =
+    selectedColor === "black" && isDarkMode
+      ? "bg-black text-white"
+      : `bg-white text-${selectedColor}`;
 
   useEffect(() => {
     const queryString = window.location.search;
@@ -41,48 +147,6 @@ export default function Task() {
     };
   }, []);
 
-  useEffect(() => {
-    return () => {
-      if (timerId) clearInterval(timerId);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (countdown === 0) {
-      setIsRunning(false);
-      setTimerFinished(true);
-    }
-  }, [countdown]);
-
-  useEffect(() => {
-    if (isRunning) {
-      const id = setInterval(() => {
-        setCountdown((prevCountdown) => {
-          if (prevCountdown === 0) {
-            clearInterval(id);
-            setIsRunning(false);
-            setTimerFinished(true);
-            setShowControlButtons(false);
-            return 0;
-          } else {
-            return prevCountdown - 1;
-          }
-        });
-      }, 1000);
-      setTimerId(Number(id));
-      return () => clearInterval(id);
-    }
-  }, [isRunning]);
-
-  const formatTime = (seconds: number) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = seconds % 60;
-    return `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
-  };
-
   const handlePause = () => {
     setIsRunning(false);
     setShowControlButtons(true);
@@ -96,7 +160,7 @@ export default function Task() {
   const handleReset = () => {
     setIsRunning(true);
     setShowControlButtons(false);
-    setTimerFinished(false);
+    setTimerIsFinished(false);
     setCountdown(
       typeof window !== "undefined"
         ? Number(localStorage.getItem("selectedTime") || 10) * 60
@@ -136,150 +200,54 @@ export default function Task() {
         <LogoAndMode isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
       </div>
       <div className="w-[640px] h-[732px] mb-[241px] flex flex-col items-center justify-center">
-        <div
-          className="text-[56px] h-[78px]"
-          style={{
-            color: `${
-              selectedColor !== "black"
-                ? "rgba(255, 255, 255, "
-                : isDarkMode
-                ? "rgba(0, 0, 0, "
-                : "rgba(255, 255, 255, "
-            }${timerFinished || !isRunning ? "0.7)" : "1)"}`,
-          }}
-        >
-          {formatTime(countdown)}
-        </div>
+        <CountdownComponent
+          countdown={formatTime(countdown)}
+          selectedColor={selectedColor}
+          isDarkMode={isDarkMode}
+          isRunning={isRunning}
+          timerFinished={timerFinished}
+          setTimerIsFinished={setTimerIsFinished}
+        />
         <div className="mt-4">
           <div className="flex flex-col items-center justify-center gap-y-[8px]">
             {!showControlButtons && isRunning && (
-              <button
-                style={{
-                  color: `${
-                    selectedColor !== "black"
-                      ? selectedColor
-                      : isDarkMode
-                      ? "white"
-                      : "black"
-                  }`,
-                }}
-                className={`w-[248px] h-[66px] py-4 px-6 rounded-lg text-lg
-                          ${
-                            selectedColor === "black" && isDarkMode
-                              ? "bg-black text-white"
-                              : "bg-white text-" + selectedColor
-                          }`}
+              <CustomButton
+                text="Pause"
                 onClick={handlePause}
-              >
-                Pause
-              </button>
+                style={buttonStyle}
+              />
             )}
             {showControlButtons && !timerFinished && (
               <>
-                <button
-                  style={{
-                    color: `${
-                      selectedColor !== "black"
-                        ? selectedColor
-                        : isDarkMode
-                        ? "white"
-                        : "black"
-                    }`,
-                  }}
-                  className={`w-[248px] h-[66px] py-4 px-6 rounded-lg text-lg
-                          ${
-                            selectedColor === "black" && isDarkMode
-                              ? "bg-black text-white"
-                              : "bg-white text-" + selectedColor
-                          }`}
+                <CustomButton
+                  text="Resume"
                   onClick={handleResume}
-                >
-                  Resume
-                </button>
-                <button
-                  style={{
-                    color: `${
-                      selectedColor !== "black"
-                        ? selectedColor
-                        : isDarkMode
-                        ? "white"
-                        : "black"
-                    }`,
-                  }}
-                  className={`w-[248px] h-[66px] py-4 px-6 rounded-lg text-lg
-                          ${
-                            selectedColor === "black" && isDarkMode
-                              ? "bg-black text-white"
-                              : "bg-white text-" + selectedColor
-                          }`}
+                  style={buttonStyle}
+                />
+                <CustomButton
+                  text="Reset"
                   onClick={handleReset}
-                >
-                  Reset
-                </button>
-                <button
-                  style={{
-                    color: `${
-                      selectedColor !== "black"
-                        ? selectedColor
-                        : isDarkMode
-                        ? "white"
-                        : "black"
-                    }`,
-                  }}
-                  className={`w-[248px] opacity-[80%] h-[66px] py-4 px-6 rounded-lg text-lg
-                          ${
-                            selectedColor === "black" && isDarkMode
-                              ? "bg-black text-white"
-                              : "bg-white text-" + selectedColor
-                          }`}
+                  style={buttonStyle}
+                />
+                <CustomButton
+                  text="Stop"
                   onClick={handleStop}
-                >
-                  Stop
-                </button>
+                  style={`${buttonStyle} opacity-[80%]`}
+                />
               </>
             )}
             {!isRunning && timerFinished && (
               <>
-                <button
-                  style={{
-                    color: `${
-                      selectedColor !== "black"
-                        ? selectedColor
-                        : isDarkMode
-                        ? "white"
-                        : "black"
-                    }`,
-                  }}
-                  className={`w-[248px] h-[66px] py-4 px-6 rounded-lg text-lg
-                          ${
-                            selectedColor === "black" && isDarkMode
-                              ? "bg-black text-white"
-                              : "bg-white text-" + selectedColor
-                          }`}
+                <CustomButton
+                  text="Reset"
                   onClick={handleReset}
-                >
-                  Reset
-                </button>
-                <button
-                  style={{
-                    color: `${
-                      selectedColor !== "black"
-                        ? selectedColor
-                        : isDarkMode
-                        ? "white"
-                        : "black"
-                    }`,
-                  }}
-                  className={`w-[248px] h-[66px] opacity-[80%] py-4 px-6 rounded-lg text-lg
-                          ${
-                            selectedColor === "black" && isDarkMode
-                              ? "bg-black text-white"
-                              : "bg-white text-" + selectedColor
-                          }`}
+                  style={buttonStyle}
+                />
+                <CustomButton
+                  text="Stop"
                   onClick={handleStop}
-                >
-                  Stop
-                </button>
+                  style={`${buttonStyle} opacity-[80%]`}
+                />
               </>
             )}
           </div>
