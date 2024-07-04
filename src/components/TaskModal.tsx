@@ -113,7 +113,7 @@ export const TaskModal: React.FC<
                 placeholder="Todo명은 최대 2줄까지 입력할 수 있습니다."
               />
               <img
-                src="/close.svg"
+                src="/Image/close.svg"
                 alt="Close"
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                 onClick={clearInputValue}
@@ -143,7 +143,7 @@ export const TaskModal: React.FC<
                 ></button>
                 {selectedColor === btnColor.hex && (
                   <img
-                    src="/check.svg"
+                    src="/Image/check.svg"
                     alt="check"
                     className="absolute inset-0 m-auto"
                     style={{ width: "16px", height: "16px" }}
@@ -188,7 +188,7 @@ export const TaskModal: React.FC<
                 className="text-start h-[50px] w-full pl-4 pr-10 items-center rounded-lg"
               />
               <img
-                src="/close.svg"
+                src="/Image/close.svg"
                 alt="Close"
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
                 onClick={clearTimeValue}

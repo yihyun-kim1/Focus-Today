@@ -128,7 +128,6 @@ export default function Home() {
     const selectedTask = todoItem[index];
     setSelectedColor(selectedTask.selectedColor);
     setSelectedTime(selectedTask.selectedTime);
-    console.log(selectedTask, "??????????");
     localStorage.setItem("text", selectedTask.text);
     localStorage.setItem("selectedTime", selectedTask.selectedTime.toString());
     localStorage.setItem("selectedColor", selectedTask.selectedColor);
@@ -210,7 +209,6 @@ export default function Home() {
         setTodoItem([...todoItem, newItem]);
         setStoredItems([...storedItems, newItem]);
       }
-      console.log(inputValue, selectedTime, selectedColor, "update!");
       setInputValue("");
       setEditInputValue("");
       setSelectedColor("");
@@ -344,7 +342,7 @@ export default function Home() {
                   </div>
                   <div className="flex w-full h-[20px] py-[6px] px-[3px] flex-col items-end">
                     <img
-                      src="/Union.png"
+                      src="/Image/Union.png"
                       className="w-[14px] h-[8px]"
                       alt="arrow"
                     />
@@ -360,7 +358,6 @@ export default function Home() {
                 setSelectedColor={setSelectedColor}
                 selectedTime={selectedTime}
                 setSelectedTime={setSelectedTime}
-                // selectedTodoTaskHeight={selectedTodoTask !== null ? taskHeights[selectedTodoTask] : 0}
                 timeValue={timeValue}
                 setTimeValue={setTimeValue}
                 setInputValue={setInputValue}

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LogoAndMode } from "@/components/LogoAndMode";
 import "../globals.css";
@@ -11,12 +11,13 @@ interface CustomButtonProps {
 }
 
 interface CountdownComponentProps {
-  countdown: string;
+  countdown: number;
+  setCountdown: Function;
   selectedColor: string;
   isDarkMode: boolean;
   timerFinished: boolean;
   isRunning: boolean;
-  setTimerIsFinished: any;
+  setTimerIsFinished: Dispatch<SetStateAction<boolean>>;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -64,6 +65,8 @@ const formatTime = (seconds: number) => {
 };
 
 const CountdownComponent: React.FC<CountdownComponentProps> = ({
+  countdown,
+  setCountdown,
   selectedColor,
   isDarkMode,
   isRunning,
@@ -74,11 +77,10 @@ const CountdownComponent: React.FC<CountdownComponentProps> = ({
       ? Number(localStorage.getItem("selectedTime") || 10) * 60
       : 10 * 60;
 
-  const [countdown, setCountdown] = useState(initialTime);
-
   useInterval(
     () => {
       if (countdown > 0 && isRunning) {
+        setTimerIsFinished(false);
         setCountdown(countdown - 1);
       } else if (countdown === 0) {
         setTimerIsFinished(true);
@@ -201,7 +203,8 @@ export default function Task() {
       </div>
       <div className="w-[640px] h-[732px] mb-[241px] flex flex-col items-center justify-center">
         <CountdownComponent
-          countdown={formatTime(countdown)}
+          countdown={countdown}
+          setCountdown={setCountdown}
           selectedColor={selectedColor}
           isDarkMode={isDarkMode}
           isRunning={isRunning}
