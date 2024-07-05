@@ -3,10 +3,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import "./globals.css";
 import { LogoAndMode } from "@/components/LogoAndMode";
-import TextareaAutosize, {
-  TextareaHeightChangeMeta,
-} from "react-textarea-autosize";
+import TextareaAutosize from "react-textarea-autosize";
 import TaskModal, { TodoItem } from "@/components/TaskModal";
+import Image from "next/image";
 
 export default function Home() {
   const router = useRouter();
@@ -74,34 +73,24 @@ export default function Home() {
     if (storedItemsJson) {
       const parsedItems = JSON.parse(storedItemsJson);
       setTodoItem(parsedItems); // 초기 todoItem 상태 설정
-      console.log(todoItem, "!!!!!!!!!!!!");
       setStoredItems(parsedItems); // 초기 storedItems 상태 설정
     }
   }, []);
 
   useEffect(() => {
-    typeof window !== "undefined"
-      ? localStorage.setItem("selectedColor", selectedColor)
-      : null;
-  }, [selectedColor]);
+    const storageMappings = {
+      selectedColor: selectedColor,
+      selectedTime: selectedTime.toString(),
+      todoItems: JSON.stringify(todoItem),
+      isDarkMode: isDarkMode.toString(),
+    };
 
-  useEffect(() => {
-    typeof window !== "undefined"
-      ? localStorage.setItem("selectedTime", selectedTime.toString())
-      : null;
-  }, [selectedTime]);
-
-  useEffect(() => {
-    typeof window !== "undefined"
-      ? localStorage.setItem("todoItems", JSON.stringify(todoItem))
-      : null;
-  }, [todoItem]);
-
-  useEffect(() => {
-    typeof window !== "undefined"
-      ? localStorage.setItem("isDarkMode", isDarkMode.toString())
-      : null;
-  }, [isDarkMode]);
+    Object.entries(storageMappings).forEach(([key, value]) => {
+      if (typeof window !== "undefined") {
+        localStorage.setItem(key, value);
+      }
+    });
+  }, [selectedColor, selectedTime, todoItem, isDarkMode]);
 
   useEffect(() => {
     if (showModal && isEditTodoItem && selectedTodoTask !== null) {
@@ -221,7 +210,7 @@ export default function Home() {
   };
 
   const editTodoItem = (index: number) => {
-    setSelectedTodoTask(index); // 현재 선택된 todo 항목의 인덱스 저장
+    setSelectedTodoTask(index);
     setIsEditTodoItem(true);
     setShowModal(true);
   };
@@ -240,10 +229,7 @@ export default function Home() {
   };
 
   // Textarea 높이 변경 함수
-  const handleHeightChange = (
-    height: number,
-    meta: TextareaHeightChangeMeta
-  ) => {
+  const handleHeightChange = (height: number) => {
     setTextareaHeight(height);
   };
 
@@ -274,7 +260,6 @@ export default function Home() {
                   className="flex w-[360px] resize-none rounded-xl outline-none px-[20px] py-[16px]  border-gray-500 text-gray-700 placeholder-custom-gray"
                   style={{
                     border: "1px solid #27272766",
-                    // borderRadius: "12px",
                     boxShadow: "0px 1px 4px 0px #00000026",
                   }}
                   value={inputValue}
@@ -341,9 +326,10 @@ export default function Home() {
                     <p className="line-clamp-2">{item.text}</p>
                   </div>
                   <div className="flex w-full h-[20px] py-[6px] px-[3px] flex-col items-end">
-                    <img
+                    <Image
                       src="/Image/Union.png"
-                      className="w-[14px] h-[8px]"
+                      width={14}
+                      height={8}
                       alt="arrow"
                     />
                   </div>

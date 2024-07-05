@@ -1,6 +1,7 @@
-import Task from "@/app/task/page";
 import React, { useEffect } from "react";
 import TextareaAutosize from "react-textarea-autosize";
+import Image from "next/image";
+
 export interface TodoItem {
   text: string;
   selectedTime: number;
@@ -112,12 +113,13 @@ export const TaskModal: React.FC<
                 onChange={handleResizeHeight}
                 placeholder="Todo명은 최대 2줄까지 입력할 수 있습니다."
               />
-              <img
+              <Image
                 src="/Image/close.svg"
                 alt="Close"
+                width={20}
+                height={20}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                 onClick={clearInputValue}
-                style={{ width: "20px", height: "20px" }}
               />
             </div>
           )}
@@ -142,11 +144,12 @@ export const TaskModal: React.FC<
                   onClick={() => setSelectedColor(btnColor.hex)}
                 ></button>
                 {selectedColor === btnColor.hex && (
-                  <img
+                  <Image
                     src="/Image/check.svg"
                     alt="check"
                     className="absolute inset-0 m-auto"
-                    style={{ width: "16px", height: "16px" }}
+                    width={16}
+                    height={16}
                   />
                 )}
               </div>
@@ -187,9 +190,11 @@ export const TaskModal: React.FC<
                 onChange={(event) => handleTime(event)}
                 className="text-start h-[50px] w-full pl-4 pr-10 items-center rounded-lg"
               />
-              <img
+              <Image
                 src="/Image/close.svg"
                 alt="Close"
+                width={20}
+                height={20}
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
                 onClick={clearTimeValue}
               />
