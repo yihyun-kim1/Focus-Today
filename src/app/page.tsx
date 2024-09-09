@@ -6,30 +6,28 @@ import { LogoAndMode } from "@/components/LogoAndMode";
 import TextareaAutosize from "react-textarea-autosize";
 import TaskModal, { TodoItem } from "@/components/TaskModal";
 import Image from "next/image";
+import { useOptionContext } from "../../providers/option-provider";
 
 export default function Home() {
   const router = useRouter();
-  const getInitialTodoItems = (): TodoItem[] => {
-    const storedItemsJson =
-      typeof window !== "undefined" ? localStorage.getItem("todoItems") : null;
-    return storedItemsJson ? JSON.parse(storedItemsJson) : [];
-  };
-
-  const [todoItem, setTodoItem] = useState<TodoItem[]>(getInitialTodoItems);
+  const {
+    getInitialTodoItems,
+    todoItem,
+    setTodoItem,
+    selectedColor,
+    setSelectedColor,
+    selectedTimeFromStorage,
+    initialDarkMode,
+    initialSelectedTime,
+    isDarkMode,
+    setIsDarkMode,
+    storedItems,
+    setStoredItems,
+  } = useOptionContext();
   const [inputValue, setInputValue] = useState<string>("");
   const [editInputValue, setEditInputValue] = useState<string>("");
   const [timeValue, setTimeValue] = useState<number | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [selectedColor, setSelectedColor] = useState<string>(
-    typeof window !== "undefined"
-      ? localStorage.getItem("selectedColor") || "black"
-      : "black"
-  );
-  const selectedTimeFromStorage =
-    typeof window !== "undefined" ? localStorage.getItem("selectedTime") : null;
-  const initialSelectedTime = selectedTimeFromStorage
-    ? parseInt(selectedTimeFromStorage)
-    : 10;
   const [selectedTime, setSelectedTime] = useState<number>(initialSelectedTime);
   const [selectedTodoTask, setSelectedTodoTask] = useState<number | null>(null);
   const [textareaHeight, setTextareaHeight] = useState(0);
@@ -39,12 +37,6 @@ export default function Home() {
     time: isEditTodoItem ? selectedTime : 0,
     text: isEditTodoItem ? inputValue : "",
   });
-  const initialDarkMode =
-    typeof window !== "undefined"
-      ? localStorage.getItem("isDarkMode") === "true"
-      : false;
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(initialDarkMode);
-  const [storedItems, setStoredItems] = useState<TodoItem[]>([]); // 상태로 변경
 
   useEffect(() => {
     const storedColor =

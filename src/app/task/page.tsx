@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LogoAndMode } from "@/components/LogoAndMode";
 import "../globals.css";
+import { useOptionContext } from "../../../providers/option-provider";
 
 interface CustomButtonProps {
   text: string;
@@ -115,20 +116,13 @@ export default function Task() {
   const [isRunning, setIsRunning] = useState(true);
   const [showControlButtons, setShowControlButtons] = useState(false);
   const [timerFinished, setTimerIsFinished] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(
-    typeof window !== "undefined"
-      ? localStorage.getItem("isDarkMode") === "true"
-      : false
-  );
-  const selectedColor =
-    typeof window !== "undefined"
-      ? localStorage.getItem("selectedColor") || "black"
-      : "black";
   const [countdown, setCountdown] = useState(
     typeof window !== "undefined"
       ? Number(localStorage.getItem("selectedTime") || 10) * 60
       : 10 * 60
   );
+  const { isDarkMode, setIsDarkMode, selectedColor, setSelectedColor } =
+    useOptionContext();
 
   const buttonStyle =
     selectedColor === "black" && isDarkMode

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Lora } from "next/font/google";
 import "./globals.css";
+import { OptionProvider } from "../../providers/option-provider";
 
 const lora = Lora({ subsets: ["latin"] });
 
@@ -16,7 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={lora.className}>{children}</body>
+      <body className={lora.className}>
+        <OptionProvider>{children}</OptionProvider>
+      </body>
     </html>
   );
 }
