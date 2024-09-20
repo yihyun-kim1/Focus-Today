@@ -16,6 +16,7 @@
 
 ## Tech Stack
 Next.js / React.js / TypeScript / Context API / Tailwind CSS
+<br/>
 Figma / Git / Github / Vercel Deploy
 <br/>
 <br/>
